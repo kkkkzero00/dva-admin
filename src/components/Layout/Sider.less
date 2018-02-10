@@ -1,0 +1,66 @@
+
+/* 不加global样式会无效 */
+:global {
+    .sider {
+        width:240px;
+        background: #fff;
+        position: absolute;
+        overflow: visible;
+        padding-bottom: 20px;
+        height: 100vh;
+        transition: all 0.3s ease-out;
+        // box-shadow: 4px 4px 20px 0 rgba(0,0,0,0.1);
+        // border-right: 1px solid #ccc;
+        
+        ul.ant-menu{
+            height:50vh;
+            border:none;
+        }
+        
+        .logo{
+            text-align:center;
+            height: 100px;
+            line-height: 40px;
+            cursor:pointer;
+            margin:28px 0;
+            transition: all 0.3 ease-out;
+            // overflow:hidden;
+        
+            img{
+                width: 40px;
+            }
+
+            span {
+                vertical-align: text-bottom;
+                font-size:16px;
+                text-transform: uppercase;
+                display: block;
+            }
+        }
+        
+    }
+
+
+
+
+
+    .fold {
+        width:45px;
+
+        :global {
+          .ant-menu {
+            .ant-menu-submenu{
+              .ant-menu-submenu-arrow{
+                display: none;
+              }
+            }
+          }
+          
+        }
+    }
+
+}
+
+// .fold > .ant-menu-submenu-title {
+//     display:none
+// }

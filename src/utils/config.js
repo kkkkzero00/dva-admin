@@ -13,9 +13,13 @@ module.exports = {
         logout:`${HJKAPI}/user/logout`,
 
         getMenus:`${HJKAPI}/menus`,
-        userPermission:`${HJKAPI}/user/permission`
+        userPermission:`${HJKAPI}/user/permission`,
+        topAlumn:`top/album`,
+
+        users:`${HJKAPI}/users`
     },
     routes:['system','nav','menu'],
     logo:'/logo.png',
-    commonPage:['/','/login']
+    commonPage:['/','/login'],
+    baseUrl:"http://localhost:4000/"
 }

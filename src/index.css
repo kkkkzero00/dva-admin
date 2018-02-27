@@ -3,3 +3,22 @@ html, body, :global(#root) {
   background-color:#f8f8f8;
 }
 
+
+*, *::before, *::after{
+    box-sizing:border-box;
+}
+
+
+::-webkit-scrollbar-thumb {
+  background-color: #e6e6e6;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+
+}
+
+
+

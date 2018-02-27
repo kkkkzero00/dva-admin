@@ -1,15 +1,17 @@
-import {users_query} from 'services/users';
+import {query} from 'services/users';
 
 
 export default {
     namespace: 'users',
     state: {
         list:[],
+        current:1,//当前分页信息
+        pageSize:10,
         total:null,
 
         loading:false,//控制加载状态
-        current:null,//当前分页信息
-        currentItem:{},//当前操作的用户对象
+        formVal:{},
+        
         modalVisible:false,//弹出窗显示状态
         modalType:'create',//弹出窗的类型（添加用户，编辑用户）
     },
@@ -20,12 +22,27 @@ export default {
                 那么我们就会发起 action，获取用户数据
              */
             history.listen(location => {
-
-            });
+                if (location.pathname === '/user') {
+                  dispatch({
+                    type: 'query',
+                    payload: location.query,
+                  })
+                }
+            })
         }
     },
     effects:{
         *query({payload},{select,call,put}){
+            yield put({type:'showLoading'})
+
+            let res =  yield call(query,payload);
+            // console.log(res)
+            yield put({type:'hideLoading'});
+
+            let {data,total} = res;
+            let {currPage} = payload;
+            yield put({type:'updateStatus',payload:{list:data,total,current:currPage}});
+
 
         },
         *create(){},
@@ -34,9 +51,18 @@ export default {
         *update(){}
     },
     reducers:{
+        updateStatus(state,{payload}){
+            return {
+                ...state,
+                ...payload
+            }
+        },
         showLoading(state,action){
             return {...state,loading:true};
         },//控制加载状态的reducer
+        hideLoading(state,action){
+            return {...state,loading:false};
+        },
         showModal(){},//控制modal显示状态的reducer
         hideModel(){},
         querySuccess(state,action){

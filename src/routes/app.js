@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'dva';
 import Layout from 'components/Layout';
 import Cookies from 'js-cookie';
-
-import appStyle from "./app.less";
+import classnames from 'classnames';
+import "./app.less";
 
 
 const {Sider,Header,Bread} = Layout;
@@ -13,12 +13,12 @@ const App = ({children,dispatch,app,loading,location}) => {
     
     const token = Cookies.get('u_Tok');
    
-    let {siderFold,menus,user,currentPath} = app
+    let {siderFold,menus,user,currentPath,isNavbar,openKeys} = app
 
-    // console.log(app)
+    // console.log(siderFold)
     // 还没登录就跳转到登录框
     // console.log(!token || location.pathname == '/login')
-
+    // console.log(app);
     if(!token || location.pathname == '/login'){   
         return (
             <div>
@@ -30,13 +30,16 @@ const App = ({children,dispatch,app,loading,location}) => {
     const siderProp = {
         menu:menus, 
         siderFold ,
-        handleClick({ item, key, keyPath }){
+        isNavbar,
+        handleClick(item, key, keyPath){
             // Cookies.set('currentPath',keyPath);
             dispatch({type:'app/updateState',payload:{currentPath:keyPath}})  
         }
     };
     const headerProps = {
         user,
+        menus,
+        isNavbar,
         switchSider(){
             dispatch({type:'app/switchSider'})
         },
@@ -52,18 +55,29 @@ const App = ({children,dispatch,app,loading,location}) => {
         menus
     }
 
-    // console.log(currentPath)
+    let drawerBgProps = {
+        switchSider(){
+            dispatch({type:'app/switchSider'})
+        },
+    }
+
+    // console.log(isNavbar)
 
 
     return (
-        <div className={appStyle.wrapper}>
+        <div className="wrapper">
             
             <Sider {...siderProp}/>
-           
-            <div className={appStyle.main} style={siderFold?{marginLeft:"45px"}:{}}>
+            {isNavbar && (!siderFold)?(<div className="drawer-bg" onClick={drawerBgProps.switchSider}></div>):''}
+            
+            <div className={classnames(
+                    'main',
+                    {'navBar':isNavbar}
+                )} 
+                style={((!isNavbar)&&siderFold)?{marginLeft:"45px"}:{}}>
                 <Header {...headerProps}/>
                 <Bread {...breadProps}/>
-                <div className={appStyle.content}>
+                <div className="content">
                     {children}
                 </div>
             </div>

@@ -4,7 +4,7 @@
     "start": "roadhog server",
     "build": "roadhog build",
     "lint": "eslint --ext .js src test",
-    "precommit": "npm run lint"
+   
   },
   "engines": {
     "install-node": "6.9.2"
@@ -40,6 +40,7 @@
     "less-loader": "^4.0.5",
     "lodash": "^4.17.4",
     "mockjs": "^1.0.1-beta3",
+    "moment": "^2.20.1",
     "prop-types": "^15.6.0",
     "qs": "^6.5.1",
     "redbox-react": "^1.4.3",

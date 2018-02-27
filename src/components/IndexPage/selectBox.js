@@ -1,25 +1,24 @@
-import {Component} from 'react';
+import { Component } from 'react';
 
-import {Icon} from 'antd';
+import { Icon } from 'antd';
+
+import './selectBox.less';
 
 export default class SelectBox extends Component{
     constructor(props){
         super(props)
 
         let list = [];
-
+        // console.log(2343);
         /*1代表元素在左，2代表元素在右*/
         this.props.list.forEach((value,index)=>{
-            list[index]= value;
+            list[index]= value;  
             list[index]['position'] = 1;
-        })
-
-
-
+        });
         
         this.state = {
             list
-        }
+        };
 
 
         // this.handleClick = this.handleClick.bind(this);
@@ -48,7 +47,7 @@ export default class SelectBox extends Component{
     }
 
     render(){
-        console.log(this.state.list)
+        // console.log(this.state.list)
         return(
             <div className="selectBox">
                 <div className="left-selectBox">

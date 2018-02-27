@@ -80,6 +80,8 @@ const fetch = (options) => {
     if(fetchType == 'JSONP'){
 
     }
+    // console.log(13)
+
     // console.log(cloneData)
     switch(method.toLowerCase()){
       case 'get':
@@ -115,8 +117,7 @@ const fetch = (options) => {
  */
 export default function request(options) {
   
-
-  return fetch(options)
+    return fetch(options)
          .then((response) => { 
               const { statusText, status } = response
 
@@ -139,6 +140,9 @@ export default function request(options) {
               //   statusCode:status,
               //   ...data
               // })
+              // console.log(data)
+
+              // console.log(14)
               return {
                 success:success,
                 message:statusText,

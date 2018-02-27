@@ -11,29 +11,42 @@ const {api} = config;
 const mockjs = require('mockjs');
 
 module.exports = {
-    'GET /api/users' (req,res) {
+    [`GET ${api.users}`] (req,res) {
         // console.log(req)
-        const page = qs.parse(req.query);
-
+        const params = qs.parse(req.query);
+        let {currPage,pageSize,...otherParams} = params;
+        console.log(otherParams);
+        // console.log(limit)
         const data = mockjs.mock({
-            'data|100':[{
-                'id|+1':1,
-                name:'@cname',
-                'age|11-99':1,
-                address:'@region'
-            }],
-            page:{
-                total:100,
-                current:1
-            }
+          'data|1000': [
+            {
+              key:'@id',
+              name: '@name',
+              phone: /^1[34578]\d{9}$/,
+              'age|11-99': 1,
+              address: '@county(true)',
+              isMale: '@boolean',
+              email: '@email',
+              createTime: '@datetime',
+              avatar () {
+                return mockjs.Random.image('100x100', mockjs.Random.color(), '#757575', 'png')
+              },
+            },
+          ],
         });
+        
 
-        res.json({
+        // if(otherParams.length){
+        //     console.log(otherParams);
+        //     // data = data.filter()
+        // }
+        // console.log(data)
+        res.status(200).json({
             success:true,
-            data:data.data,
-            page:data.page
+            data:data.data.slice((currPage-1)*pageSize,(currPage*pageSize)),
+            total:data.data.length
         });
-        console.log(res);
+        // console.log(res);
     },
 
     [`GET ${api.userPermission}`] (req,res) {

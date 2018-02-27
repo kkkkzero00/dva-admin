@@ -9,6 +9,6 @@ export async function query(data) {
     method:'post',
     data
   }
-
+  // console.log(12)
   return request(params);
 }

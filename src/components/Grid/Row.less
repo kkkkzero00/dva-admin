@@ -1,0 +1,35 @@
+:global{
+    .hjk-row {
+        position: relative;
+        margin-left: 0;
+        margin-right: 0;
+        height: auto;
+        zoom: 1;/*触发BFC,用于清除浮动*/
+        display: block;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+    .hjk-row:before,.hjk-row:after {
+        content:"";
+        display: table;
+    }
+
+    .hjk-row:after{
+        clear: both;
+        visibility: hidden;
+        font-size: 0;
+        height: 0;
+    }
+
+    // .hjk-row .hjk-col:nth-child(even){
+    //     background: pink;
+    // }
+
+    // .hjk-row .hjk-col:nth-child(odd){
+    //     background: #0099CC;
+    // }
+
+
+
+
+}

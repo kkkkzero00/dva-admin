@@ -9,11 +9,12 @@ const Login = ({login,dispatch,form:{getFieldDecorator,validateFieldsAndScroll}}
     // console.log(arguments)
 
     function handleOk(){
-        validateFieldsAndScroll((errors,values) => {
+       validateFieldsAndScroll( async (errors,values) => {
             // console.log(errors)
             if(errors) return;
             // console.log(1231)
             dispatch({type:'login/login',payload:values})
+    
         })
     }
 

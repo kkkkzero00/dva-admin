@@ -1,6 +1,6 @@
 import React,{Component} from 'react';
 
-import {Menu,Icon,Dropdown} from 'antd';
+import {Menu,Icon} from 'antd';
 import { Link } from 'dva/router';
 import PropTypes from 'prop-types';
 import BreadStyle from './Bread.less'
@@ -26,10 +26,12 @@ const Bread = ({currentPath,menus}) => {
 
             let breadItem = currMenu[currMenu.findIndex(item => item.id == breadId)];
             
+            // console.log(breadItem)
+
             if(breadItem.route){
-                Breads.unshift(<span key={breadItem.id}><Link to={breadItem.route}>{breadItem.name}</Link></span>)
+                Breads.unshift(<span key={breadItem.id}><Icon type={breadItem.icon} style={{marginRight:4}}/><Link to={breadItem.route}>{breadItem.name}</Link></span>)
             }else{
-                Breads.unshift(<span key={breadItem.id}><span>{breadItem.name + " / "}</span></span>)
+                Breads.unshift(<span key={breadItem.id}><Icon type={breadItem.icon} style={{marginRight:4}}/><span>{breadItem.name + " / "}</span></span>)
             }
         }
         // console.log(Breads)

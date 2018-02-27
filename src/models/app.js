@@ -18,8 +18,11 @@ export default {
                 router:'/dashboard'
             }
         ],
+        //打开是false，关闭是true
         siderFold:localStorage.getItem('siderFold') === 'true',
-        currentPath:["1"]
+        currentPath:["1"],
+        isNavbar: document.body.clientWidth < 769,
+        isSmallScrean:document.body.clientWidth < 769,
     },
     subscriptions:{
         // 用于监听路http://localhost:8000/indexPage由
@@ -43,6 +46,8 @@ export default {
                 })
             }
 
+
+
             /*处理面包屑*/
             history.listen(({ pathname }) => {
                 // console.log(pathname)
@@ -53,13 +58,13 @@ export default {
             });
 
             
-            /*let timer;
+            let timer;
             window.onresize = () => {
                 clearTimeout(timer);
                 timer = setTimeout(() => {
                     dispatch({type:'changeNavbar'})
                 },300)
-            }*/
+            }
         },
 
     },
@@ -176,6 +181,14 @@ export default {
                 }
             })
         },
+
+        *changeNavbar ({payload}, { put, select }) {
+          const { app } = yield(select(_ => _))
+          const isNavbar = document.body.clientWidth < 769
+          if (isNavbar !== app.isNavbar) {
+            yield put({ type: 'updateState', payload:{ isNavbar, isSmallScrean:isNavbar}})
+          }
+        },
     },
 
     reducers:{
@@ -186,15 +199,21 @@ export default {
             }
         },
 
-        
         switchSider(state){
             // console.log(state)
             localStorage.setItem('siderFold',!state.siderFold);
             let siderFold = !state.siderFold
             return {
                 ...state,
-                siderFold
+                siderFold,
             }
-        }
+        },
+        
+        // handlePageStatus (state, { payload }) {
+        //   return {
+        //     ...state,
+        //     isNavbar: payload,
+        //   }
+        // },
     }
 }

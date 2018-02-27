@@ -13,10 +13,18 @@ export default {
         *login({payload},{put,call}){
             // console.log(payload) 
             // console.log(query)
+            
             yield put({type:'showLoading'});
+            // console.log(11)
+            
             const info = yield call(query,payload);
+
+            // console.log(15)
+
             yield put({type:'hideLoading'});
             
+            // console.log(16)
+
             // console.log(info)
             if(info&&info.success){
                 const from = queryURL('from');

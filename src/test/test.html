@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+    <script type="text/javascript">
+        // let arr = [1,2,3,4,5];
+
+        // let brr = [7,8,9,10];
+
+        // Array.prototype.unshift.apply(arr, brr);
+        // console.log(arr)
+
+        // console.log(Math.floor(6/3))
+        
+        let arr = [false,false,false];
+
+        // let a = new Array(3);
+        // a.fill(true);
+        // console.log(a);
+
+
+        // arr = arr.concat(a);
+        // console.log(arr)
+
+        // arr.fill(false,-3);
+        // console.log(arr)
+
+
+        // arr.fill(true,0,3);
+        // console.log(arr)
+
+
+        function setUlLoading(arr,direct,num,val,onlyChange=false){
+            if(direct == 1){
+                if(!onlyChange){
+                    let a = new Array(num);
+                    a.fill(val)
+
+                    arr = a.concat(arr);
+                }else{
+                    arr.fill(val,0,num);
+                }
+            }else if(direct == 2){
+                if(!onlyChange){
+                    let a = new Array(num);
+                    a.fill(val)
+
+                    arr = arr.concat(a);
+                }else{
+                    arr.fill(val,-num);
+                }
+            }
+
+            return arr
+        }
+        // arr = setUlLoading(arr,2,3,false);
+        // console.log(arr);
+        // arr = setUlLoading(arr,2,3,true,true)
+        // console.log(arr);
+
+        // arr = setUlLoading(arr,1,3,false);
+        // console.log(arr);
+        // arr = setUlLoading(arr,1,3,true,true);
+        // console.log(arr);
+    </script>
+</body>
+</html>

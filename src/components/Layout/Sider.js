@@ -1,8 +1,12 @@
+import {Component,PureComponent} from 'react';
+
 import PropTypes from 'prop-types';
 import config from 'utils/config';
 import {Menu,Icon} from 'antd';
 import lodash from 'lodash';
 import { Link } from 'dva/router';
+import {arrayToTree} from 'utils/commonFunc';
+
 
 import SiderStyle from './Sider.less'
 import classnames from 'classnames'
@@ -13,70 +17,49 @@ const MenuItem = Menu.Item;
 
 
 
-const Sider = ({menu,siderFold,handleClick}) => {
-    // console.log(menu)
+class Sider  extends PureComponent{
+    constructor(props){
+
+        super(props);
+
+        let {menu,siderFold,isNavbar} = props;
+
+        menu = menu.filter((item) => {
+            return item.type != 'url';
+        })
+        let menuTree = arrayToTree(menu);
+
+        this.state = {
+            openKeys:['5'],
+            menuTree,
+            isNavbar,
+            siderFold
+        };
+
+       this.handleClick = this.handleClick.bind(this);
+       this.onOpenChange = this.onOpenChange.bind(this);
+    }
 
     /*首先把数组menu变成树状结构*/
 
-    /**
-     * [description]
-     * @param  {[type]} array    [description]
-     * @param  {String} id       [description]
-     * @param  {String} pid      [description]
-     * @param  {String} children [description]
-     * @return {[type]}          [description]
-     */
-    const arrayToTree = (array,id='id',pid='pid',children='children') => {
-        if (!(array instanceof Array))  return null
     
-        let data  = lodash.cloneDeep(array);
-
-        let hash = {};
-        let result = [];
-
-        data.forEach((item,index) => {
-            hash[data[index][id]] = item;
-        })
-
-        data.forEach((item) => {
-            let parent = hash[item[pid]];
-
-            if(parent){
-                !parent[children] && (parent[children] = []);
-                parent[children].push(item)
-            }else{
-                result.push(item)
-            }
-        })
- 
-        return result;
-    }
-    // console.log(menu)
-    menu = menu.filter((item) => {
-        return item.type != 'url';
-    })
-
-    // console.log(menu);
-
-    let menuTree = arrayToTree(menu);
-
     
     /*通过这个树状结构再生成树状环境*/
-    const getMenu = (menuTree,type="0") => {
+    getMenu(menuTree,siderFold,type="0") {
         // console.log(siderFold)
         return menuTree.map((item,index)=>{
 
             if(item.children){
                 return (
                     <SubMenu 
-                        key={item.id} 
+                        key={item.id}
                         title={
                             <span>
                                 <Icon type={item.icon} />
                                 {!siderFold && item.name}
                             </span>
                         }>
-                        {getMenu(item.children,2)}
+                        {this.getMenu(item.children,siderFold,2)}
                     </SubMenu>
                 )
             }else{
@@ -93,31 +76,95 @@ const Sider = ({menu,siderFold,handleClick}) => {
         })     
     }
 
-    // console.log(menuTree)
+    onOpenChange(openKeys) {
 
-    const onOpenChange = () => {
+        let {isNavbar,siderFold} = this.state;
+
+        if(!isNavbar){
+            // console.log(openKeys)
+            let lastOpenKeys = openKeys.find(item => this.state.openKeys.indexOf(item) == -1);
+       
+
+            if(lastOpenKeys){
+                this.setState({
+                    openKeys:[lastOpenKeys]
+                });
+            }else{
+                this.setState({
+                    openKeys:[]
+                })
+            }           
+        }
+
 
     }
 
-    let cs = classnames(
-        'sider',
-        {fold:siderFold}
-    )
-    // console.log(config)
-    return (
-        <div className={cs}>
-            <div className="logo">
-                <img alt={'logo'} src={config.logo} />
-                <span>HJK</span>
+    handleClick({ item, key, keyPath }){
+        this.props.handleClick(item, key, keyPath)
+    }
+
+    componentWillReceiveProps(nextProps){
+        let {siderFold,isNavbar} = nextProps;
+
+        if(siderFold != this.state.siderFold){
+            this.setState({siderFold})
+        }
+
+        if(isNavbar != this.state.isNavbar){
+            this.setState({isNavbar})
+        }
+
+    }
+
+    render(){
+        
+        let {siderFold,isNavbar,menuTree,openKeys} = this.state
+        // console.log(this.state)
+        let cs = classnames({
+            'sider':!isNavbar,
+            'fold':(!isNavbar && siderFold),
+
+            'navSider':isNavbar,
+            'navFold':(isNavbar && siderFold),
+        })
+
+        
+        let mode = (siderFold || isNavbar) ? 'vertical' :'inline';
+        let menuProps = {}
+        
+
+        //注意这里要指定不同的key 否则就相当于渲染同一个sider
+        if(mode == 'inline'){
+            // console.log(openKeys);
+            menuProps = {
+                key:"sider1",
+                mode,
+                openKeys,
+                onOpenChange:this.onOpenChange,
+                onClick:this.handleClick
+            }
+        }else{
+            menuProps = {
+                key:"sider2",
+                mode,
+                onClick:this.handleClick
+            }
+        }
+
+        return (
+            <div className={cs}>
+                <div className="logo">
+                    <img alt={'logo'} src={config.logo} />
+                    <span>HJK</span>
+                </div>
+                <Menu {...menuProps}>
+                    {this.getMenu(menuTree,siderFold)}
+                </Menu>)
+                
             </div>
-            <Menu
-                mode={siderFold ? 'vertical' :'inline'}
-                onOpenChange={onOpenChange}
-                onClick = {handleClick}>
-                {getMenu(menuTree)}
-            </Menu>
-        </div>
-    )
+        )
+    }
+    
 }
 
 Sider.propTypes = {

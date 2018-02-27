@@ -1,0 +1,34 @@
+:global{
+    .contentInner{
+      background: #fff;
+      // min-height: 600px;
+      // height: 60vh;
+      position: relative;
+      box-shadow: 4px 4px 20px 0 rgba(0, 0, 0, 0.01);
+
+      .list-card-body{
+        padding: 24px;
+        zoom:1;
+
+        .ant-form-item {
+          margin-bottom: 24px;
+          margin-right: 10px;
+          display: flex;//将FormItem的格式设为flex
+          //调整label的宽度
+          > .ant-form-item-label {
+            width: auto;
+            line-height: 38px;
+            padding-right: 8px;
+          }
+          .ant-form-item-control {
+            line-height: 32px;
+          }
+        }
+        .ant-form-item-control-wrapper {
+          //填充剩下区域
+          flex-grow: 1;
+        }
+          
+      }
+    }
+}

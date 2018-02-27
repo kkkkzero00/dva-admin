@@ -1,19 +1,18 @@
 
 /* 不加global样式会无效 */
 :global {
-    .sider {
+    .baseSider {
         width:240px;
         background: #fff;
         position: absolute;
-        overflow: visible;
-        padding-bottom: 20px;
-        height: 100vh;
+        overflow: auto;
+        overflow-x:hidden;
+        height: 100%;
         transition: all 0.3s ease-out;
         // box-shadow: 4px 4px 20px 0 rgba(0,0,0,0.1);
         // border-right: 1px solid #ccc;
         
         ul.ant-menu{
-            height:50vh;
             border:none;
         }
         
@@ -36,8 +35,17 @@
                 text-transform: uppercase;
                 display: block;
             }
-        }
-        
+        } 
+    }
+
+    .sider{
+        .baseSider;
+
+    }
+
+    .navSider{
+        .baseSider;
+        z-index: 100;
     }
 
 
@@ -57,6 +65,10 @@
           }
           
         }
+    }
+
+    .navFold{
+        transform:translateX(-240px);
     }
 
 }

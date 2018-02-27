@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+    <script type="text/javascript">
+        var triangle = {a: 1, b: 2, c: 3};
+
+        function ColoredTriangle() {
+          this.color = 'red';
+        }
+
+        ColoredTriangle.prototype = triangle;
+
+        var obj = new ColoredTriangle();
+
+        //只会遍历自己这一级的属性
+        for (var prop in obj) {
+          if ({}.hasOwnProperty.call(obj,prop)) {
+            console.log(prop);
+          } 
+        }
+
+        //不加那个判断会连原型上的属性也一起遍历
+        for (var prop in obj) {       
+            console.log(prop);
+        }
+
+// Output:
+// "obj.color = red"
+    </script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+    <script type="text/javascript">
+        let obj = {
+            name:'name',
+            label:'姓名',
+            form:['add','edit'],
+            search:{
+                open:true
+            },
+            rules:{
+                type:'string',
+            },
+            checkThis1(){
+                console.log(this)
+            },
+            checkThis2:()=>{
+                console.log(this)
+            }
+        }
+
+        // console.log(!!(obj.search));
+        
+        obj.checkThis1();
+        obj.checkThis2();
+
+        function Check(){
+           this.state = '123';
+           return {
+            checkFunc(){
+                    const {checkThis1,checkThis2} = obj
+
+
+                    obj.checkThis1();
+                    obj.checkThis2();
+
+
+                    checkThis1();
+                    checkThis2();
+
+                    console.log(this);
+            }
+           }
+        }
+
+        let a = new Check();
+        
+        a.checkFunc()     
+        // let obj2 = {}
+        // console.log(!obj2);
+    </script>
+</body>
+</html>

@@ -20,7 +20,7 @@ export async function query(data){
     }
 
     searchParams = searchParams.join('&');
-    console.log(searchParams);
+    // console.log(searchParams);
 
     let finalUrl = api.users+'?'+searchParams;
 
@@ -31,4 +31,41 @@ export async function query(data){
    
     return request(params);
 }
+
+
+/*新增数据*/
+export async function create(data){
+
+    let params = {
+        url:api.user,
+        method:'post',
+        data
+    }
+   
+    return request(params);
+}
+
+/*更新数据*/
+export async function update(data){
+
+    let params = {
+        url:api.user+"/:id",
+        method:'post',
+        data
+    }
+   
+    return request(params);
+}
+
+export async function remove(data){
+
+    let params = {
+        url:api.user,
+        method:'delete',
+        data
+    }
+   
+    return request(params);
+}
+
 

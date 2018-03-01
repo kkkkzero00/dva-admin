@@ -159,7 +159,7 @@ class Sider  extends PureComponent{
                 </div>
                 <Menu {...menuProps}>
                     {this.getMenu(menuTree,siderFold)}
-                </Menu>)
+                </Menu>
                 
             </div>
         )

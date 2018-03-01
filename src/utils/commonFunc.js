@@ -10,6 +10,10 @@ const queryURL = (name) => {
 }
 
 
+const isPlainObj = (obj) => {
+    return Object.keys(obj).length == 0;
+}
+
 /**
  * [description]
  * @param  {[type]} array    [description]
@@ -47,5 +51,6 @@ const arrayToTree = (array,id='id',pid='pid',children='children') => {
 
 module.exports = {
     queryURL,
-    arrayToTree
+    arrayToTree,
+    isPlainObj
 }

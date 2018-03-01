@@ -1,61 +1,33 @@
 import { Component,PureComponent} from 'react';
 
-import { Button, Form, Input ,Icon ,DatePicker  } from 'antd';
+import { Button, Form, Input ,Icon ,Select } from 'antd';
 
 import Grid from 'components/Grid';
+import {isPlainObj} from 'utils/commonFunc';
+
 const { HRow, HCol } = Grid;
 
 const FormItem = Form.Item;
-const  {RangePicker} = DatePicker;
-import moment from 'moment';
+
+
 
 class SearchForm extends PureComponent{
 
     constructor(props){
-        super(props);
-
-        let {getSearchData,isSmallScrean} = props;
-        
-        let slist = [
-            {
-                name:'name',
-                label:'姓名'
-            },
-            {
-                name:'createTime',
-                label:'创建时间',
-                type:'RangePicker'
-            },
-            {
-                name:'age',
-                label:'年龄'
-            },
-            {
-                name:'gender',
-                label:'性别',
-                type:'status'
-            },
-            {
-                name:'phone',
-                label:'电话'
-            },
-            {
-                name:'address',
-                label:'地址',
-                type:'address'
-            },
-        ];
+        super(props);     
 
         this.state = {
-            slist,
-            isSmallScrean,
             collapse:true
         }
 
         this.collapseList = this.collapseList.bind(this);
     }
 
-
+    /**
+     * [搜索框提交后执行的代码]
+     * @param  {[type]} e [触发事件的事件对象]
+     * @return {[type]}   [description]
+     */
     handleSearch = (e) => {
         const { validateFieldsAndScroll} = this.props.form;
         e.preventDefault();
@@ -68,8 +40,8 @@ class SearchForm extends PureComponent{
 
             Object.keys(fieldsVal).forEach((item) => {
                 if(fieldsVal[item] == undefined) return;
-
-                if(item.toLowerCase() == 'createtime'){
+                let t_item = item.toLowerCase()
+                if(t_item == 'createtime'){
                     newVal[item] = [];
                     fieldsVal[item].forEach(dateTime => {
                         let format = dateTime.format('YYYY-MM-DD');
@@ -85,6 +57,10 @@ class SearchForm extends PureComponent{
         })
     }
 
+    /**
+     * [collapseList 设置搜索框的折叠状态]
+     * @return {[type]} [description]
+     */
     collapseList(){
         let {collapse} = this.state;
 
@@ -103,56 +79,34 @@ class SearchForm extends PureComponent{
         }
     }
 
-    checkInputType = (item) => {
-        const { form:{getFieldDecorator},formVal } = this.props;
+    /**
+     * [表单控件的渲染]
+     * @param  {[type]} item [description]
+     * @return {[type]}      [description]
+     */
+    formItemRender = (item) => {
+        const { form:{getFieldDecorator},createInputComponent,createInitValue} = this.props;
 
-        let initialCreateTime = [];
-        
-        // console.log(formVal)
+        let rules = (!!(item.search) && !isPlainObj(item.search))?(!!(item.search.rules)?item.search.rules:''):''
 
-        if({}.hasOwnProperty.call(formVal,'createTime')){
-            if(formVal.createTime[0]) initialCreateTime[0] = moment(formVal.createTime[0]);
-            if(formVal.createTime[1]) initialCreateTime[1] = moment(formVal.createTime[1]);
+        let inputOptions = { 
+            initialValue:createInitValue(item,'search'),
+            rules:[rules]
         }
 
-        if(item.type == null){
-            return getFieldDecorator(item.name,{
-                    rules:[
-                        {
-                        }
-                    ]
-                })(<Input placeholder={item.label}/>) 
-        }
-
-        switch(item.type.toLowerCase()){
-            case 'rangepicker':
-                return getFieldDecorator(item.name,{ initialValue: initialCreateTime },{
-                    rules:[
-                        {
-                            type:'array',
-                            message:'please select time'
-                        }
-                    ]
-                })(<RangePicker
-                        style={{width:'auto'}}
-                        format="YYYY-MM-DD"
-                        placeholder={['开始时间', '结束时间']}/>)
-            break;
-            default:
-                return getFieldDecorator(item.name,{
-                    rules:[
-                        {
-                        }
-                    ]
-                })(<Input placeholder={item.label}/>)
-                         
-        }
+        return getFieldDecorator(item.name,inputOptions)(createInputComponent(item));                    
     }
 
-
+    /**
+     * [简单的渲染搜索框（只渲染前两个搜索框）]
+     * @param  {[type]} list [搜索框的数据]
+     * @return {[type]}      [description]
+     */
     simpleSearchList = (list) => {
+        
+        list = list.filter(item => (!!(item.search) && item.search.open) );
         list = list.slice(0,2);
-
+        // console.log(list);
         return (
             <Form layout="inline" onSubmit={this.handleSearch}>
                 <HRow>
@@ -160,7 +114,7 @@ class SearchForm extends PureComponent{
                         // console.log(item)
                         return (<HCol span={4} sm={12} key={index} >
                                     <FormItem hasFeedback label={item.label}>
-                                        {this.checkInputType(item)}
+                                        {this.formItemRender(item)}
                                     </FormItem>
                                 </HCol>)
                         
@@ -182,10 +136,16 @@ class SearchForm extends PureComponent{
         )
     }
 
+    /**
+     * [完全渲染搜索框]
+     * @param  {[type]} list [description]
+     * @return {[type]}      [description]
+     */
     advancedSearchList = (list) => {
-        const { getFieldDecorator } = this.props.form;
-        let {isSmallScrean} = this.state;
-        
+        const { getFieldDecorator,isSmallScrean} = this.props.form;
+
+        list = list.filter(item => (!!(item.search) && item.search.open));
+        // console.log(list)
         return (
             <Form layout="inline" onSubmit={this.handleSearch}>
                 <HRow>
@@ -193,7 +153,7 @@ class SearchForm extends PureComponent{
                         return (
                             <HCol span={4} sm={12} key={index} >
                                 <FormItem hasFeedback label={item.label}>
-                                    {this.checkInputType(item)}
+                                    {this.formItemRender(item)}
                                 </FormItem>
                             </HCol>)
                     })}
@@ -211,13 +171,17 @@ class SearchForm extends PureComponent{
         )
     }
 
+    /**
+     * [搜索框正式渲染]
+     * @param  {[type]} list [description]
+     * @return {[type]}      [description]
+     */
     renderSearchList = (list) => { 
         return (this.state.collapse)?this.simpleSearchList(list):this.advancedSearchList(list);
     }
 
-
     render(){
-        let { slist } = this.state;
+        let { slist } = this.props;
 
         return (
             <div className="searchForm">  

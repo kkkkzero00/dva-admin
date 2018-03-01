@@ -7,6 +7,7 @@
       box-shadow: 4px 4px 20px 0 rgba(0, 0, 0, 0.01);
 
       .list-card-body{
+
         padding: 24px;
         zoom:1;
 
@@ -15,20 +16,41 @@
           margin-right: 10px;
           display: flex;//将FormItem的格式设为flex
           //调整label的宽度
+          
+          .ant-form-item-control-wrapper {
+            //填充剩下区域
+            flex-grow: 1;
+            display: inline-block;
+            .ant-form-item-control {
+              width: 100%;
+              line-height: 32px;
+            }
+          }
+          
           > .ant-form-item-label {
             width: auto;
             line-height: 38px;
             padding-right: 8px;
           }
-          .ant-form-item-control {
-            line-height: 32px;
+          
+        }
+
+
+        .toolBtn {
+          margin: 20px auto;
+
+          .ant-btn{
+            margin-right: 10px;
           }
         }
-        .ant-form-item-control-wrapper {
-          //填充剩下区域
-          flex-grow: 1;
-        }
+
+        .tableList{
+          .ant-table-thead > tr > th.ant-table-selection-column-custom{
+            padding-right:16px;
+          }
           
+        }
       }
+        
     }
 }

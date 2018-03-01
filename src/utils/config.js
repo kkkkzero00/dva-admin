@@ -16,7 +16,8 @@ module.exports = {
         userPermission:`${HJKAPI}/user/permission`,
         topAlumn:`top/album`,
 
-        users:`${HJKAPI}/users`
+        users:`${HJKAPI}/users`,
+        user:`${HJKAPI}/user`
     },
     routes:['system','nav','menu'],
     logo:'/logo.png',

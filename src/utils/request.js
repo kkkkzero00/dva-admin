@@ -119,6 +119,7 @@ export default function request(options) {
   
     return fetch(options)
          .then((response) => { 
+              
               const { statusText, status } = response
 
               let success = false;
@@ -140,7 +141,7 @@ export default function request(options) {
               //   statusCode:status,
               //   ...data
               // })
-              // console.log(data)
+              // console.log(response)
 
               // console.log(14)
               return {

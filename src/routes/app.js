@@ -21,7 +21,7 @@ const App = ({children,dispatch,app,loading,location}) => {
     // console.log(app);
     if(!token || location.pathname == '/login'){   
         return (
-            <div>
+            <div className="wrapper">
                 {children}
             </div>
         )

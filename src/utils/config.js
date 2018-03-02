@@ -3,8 +3,6 @@ const HJKAPI = '/api/v1'
 module.exports = {
     name: 'HJK ROOM',
     footerText:'HJK Design ',
-    logo:'logo.png',
-
     defaultPages:['/login'],
     apiPrefix:HJKAPI,
     

@@ -96,10 +96,7 @@ dashboard设计稿：<https://dribbble.com/shots/3108122-Dashboard-Admin>
 
 ## 截图
 
-web
-
 ![](public/demo1.png)
 
-移动
 
 ![](public/demo2.png)

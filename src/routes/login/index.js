@@ -7,7 +7,7 @@ const FormItem = Form.Item;
 
 
 const Login = ({login,dispatch,form:{getFieldDecorator,validateFieldsAndScroll}}) => {
-    const {loginLoading} = login;
+    const {loginLoading,isSmallScrean} = login;
     
     // console.log(arguments)
 
@@ -24,7 +24,7 @@ const Login = ({login,dispatch,form:{getFieldDecorator,validateFieldsAndScroll}}
     // console.log(login)
     return (
         <div className="container">
-            <div className="login-form">
+            <div className="login-form" style={isSmallScrean?{width:240}:{}}>
                 <div className="logo">
                     <span>
                         <img alt="logo" src={config.logo}/>
@@ -91,7 +91,9 @@ const mapStateProps = (state)=>{
     // if(app.hasTriggerLogin){
     //     login.showMessage = true
     // }
-    // console.log(state)
+
+    login = {...login,isSmallScrean:app.isSmallScrean};
+
     return {login}
 }
 

@@ -1,0 +1,58 @@
+:global{
+    .loader{
+        position: fixed;
+        height: 100%;
+        width: 100%;
+        z-index:1000;
+        background: #f8f8f8;
+
+        .loader-container{
+            width: 200px;
+            height: 200px;
+            margin: auto;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+
+            .loader-spining{
+                width: 100px;
+                height: 100px;
+                margin:0 auto;
+                border-top:1px solid rgba(51,51,51,.8);
+                border-left:1px solid rgba(51,51,51,.8);
+                border-bottom:1px solid rgba(51,51,51,.8);
+                border-right:1px solid rgba(51,51,51,.2);
+                border-radius: 50%;
+                
+                :local {
+                    animation:spinner 600ms infinite linear;
+                }
+            }
+
+            .loader-text{
+                margin-top:24px;
+                text-align: center;
+            }
+
+        }
+    }
+
+    .loader-hidden{
+        opacity: 0;
+        z-index: -1;
+        transition: opacity 1s ease 0.5s, z-index 0.1s ease 1.5s;
+    }
+
+    @keyframes spinner {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+}

@@ -4,6 +4,7 @@ import {routerRedux} from 'dva/router'
 import Cookies from 'js-cookie';
 import config from 'utils/config';
 
+
 export default {
     namespace:'app',
     state:{
@@ -21,8 +22,9 @@ export default {
         //打开是false，关闭是true
         siderFold:localStorage.getItem('siderFold') === 'true',
         currentPath:["1"],
-        isNavbar: document.body.clientWidth < 769,
-        isSmallScrean:document.body.clientWidth < 769,
+        isNavbar: document.body.clientWidth < 800,
+        isMiddleScrean:document.body.clientWidth < 800 && document.body.clientWidth > 456,
+        isSmallScrean:document.body.clientWidth <= 456,
     },
     subscriptions:{
         // 用于监听路http://localhost:8000/indexPage由

@@ -172,10 +172,10 @@ class Users extends Component {
           {
             title: '头像',
             dataIndex: 'avatar',
-            key: 'avatar',
-            width: 64,
+            key: 'avatar',           
             render: (text) => <img alt={'avatar'} width={24} src={text} />,
-          }, {
+          }, 
+          {
             title: '姓名',
             dataIndex: 'name',
             key: 'name',
@@ -205,7 +205,8 @@ class Users extends Component {
             title: '创建时间',
             dataIndex: 'createTime',
             key: 'createTime',
-          }
+          },
+          
       ]
     };
 
@@ -229,24 +230,27 @@ class Users extends Component {
      */
     createInputComponent = (item) => {
         let {type='text',options,label} = item;
+        let { isSmallScrean } = this.props.users;
+        let inputSize = isSmallScrean?'small':'default';
 
         switch(type.toLowerCase()){
             case 'rangepicker':
                 return <RangePicker
+                        size={inputSize}
                         style={{width:'auto'}}
                         format="YYYY-MM-DD"
                         placeholder={['开始时间', '结束时间']}/>
 
             case 'select':
                 return (
-                    <Select>
+                    <Select size={inputSize}>
                       {options.map((opt)=>{
                         return <Option value={opt.id} key={opt.id}>{opt.name}</Option>
                       })}
                     </Select>
                 )
             default:
-                return (<Input placeholder={label}/>);
+                return (<Input placeholder={label} size={inputSize}/>);
         }
     }
 
@@ -301,13 +305,25 @@ class Users extends Component {
     
     render(){
         let {columns,formVal,selectedRows,modalVisible,modalType} = this.state;
-        let {dispatch,users:{list,loading,current,pageSize,total,isSmallScrean,submitStatus}} = this.props;
+        let {
+          dispatch,
+          users:{
+            list,
+            loading,
+            current,
+            pageSize,
+            total,
+            submitStatus,
+            isSmallScrean,
+            isMiddleScrean
+          }
+        } = this.props;
         // console.log(this.state);
         let self = this;
 
         const searchFormProps = {
           slist:userConfig,
-          isSmallScrean,
+          isSmallScrean:isSmallScrean && (document.body.clientWidth<=456),
           createInputComponent:this.createInputComponent,
           createInitValue:this.createInitValue,
           getSearchData(formVal){
@@ -318,11 +334,14 @@ class Users extends Component {
           },
         }
 
+
+        
         const tableListProps = {
-            isSmallScrean,
-            dataSource:list,
+            isNotLargetScreen:(isMiddleScrean || isSmallScrean),
+            list,
             loading,
             columns,
+            selectedRows,
             rowKey:record => record.key,
             pagination:{
               current,
@@ -377,7 +396,6 @@ class Users extends Component {
                     this.setState({selectedRows:{},currentRow:{}})
                   }
                 }
-              
             }
             // expandedRowRender(record){
             //     console.log(record);
@@ -439,7 +457,6 @@ class Users extends Component {
           },
         }
 
-        // console.log(this.state.currentRow)
 
         return (
             <div className="contentInner">
@@ -463,11 +480,12 @@ Users.propTypes = {
 
 const mapStateProps = (state)=>{
     let {users,app} = state;
-   
+    let {isSmallScrean,isMiddleScrean} = app;
     // if(app.hasTriggerLogin){
     //     login.showMessage = true
     // }
-    users = {...users,isSmallScrean:app.isSmallScrean};
+    
+    users = {...users,isSmallScrean,isMiddleScrean};
     // console.log(users)
     return {users}
 }

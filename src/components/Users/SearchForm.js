@@ -4,6 +4,9 @@ import { Button, Form, Input ,Icon ,Select } from 'antd';
 
 import Grid from 'components/Grid';
 import {isPlainObj} from 'utils/commonFunc';
+import classnames from 'classnames';
+
+import './searchForm.less';
 
 const { HRow, HCol } = Grid;
 
@@ -72,11 +75,7 @@ class SearchForm extends PureComponent{
     }
 
     componentWillReceiveProps(nextProps){
-        if(nextProps.isSmallScrean != this.state.isSmallScrean){
-            this.setState({
-                isSmallScrean:nextProps.isSmallScrean
-            })
-        }
+
     }
 
     /**
@@ -103,37 +102,69 @@ class SearchForm extends PureComponent{
      * @return {[type]}      [description]
      */
     simpleSearchList = (list) => {
-        
+        let {isSmallScrean} = this.props;
+
         list = list.filter(item => (!!(item.search) && item.search.open) );
         list = list.slice(0,2);
-        // console.log(list);
-        return (
-            <Form layout="inline" onSubmit={this.handleSearch}>
-                <HRow>
-                    {list.map((item,index)=>{
-                        // console.log(item)
-                        return (<HCol span={4} sm={12} key={index} >
-                                    <FormItem hasFeedback label={item.label}>
-                                        {this.formItemRender(item)}
-                                    </FormItem>
-                                </HCol>)
-                        
-                    })}
-                    <HCol span={4} sm={12} key="searchButton" >
-                        <div style={{ overflow: 'hidden' }}>
-                          <span style={{}}>
-                            <Button type="primary" htmlType="submit">查询</Button>
-                           {/* <Button style={{ marginLeft: 8 }} >重置</Button>*/}
-                            <a style={{ marginLeft: 8 }} onClick={this.collapseList}>
-                              展开 <Icon type="down" />
-                            </a>
-                          </span>
+
+        let layout = isSmallScrean?"vertical":"inline"
+        // console.log(isSmallScrean);
+
+
+        if(isSmallScrean){
+            return (<Form layout={layout} onSubmit={this.handleSearch}>
+                        {list.map((item,index)=>{
+                            // console.log(item)
+                            return (
+                              <FormItem 
+                                  hasFeedback 
+                                  label={item.label} 
+                                  key={index}>
+                                  {this.formItemRender(item)}
+                              </FormItem>
+                            )
+                        })}
+
+                        <div className="searchTool" style={{ overflow: 'hidden'}}>
+                            <span style={{}}>
+                              <Button type="primary" htmlType="submit">查询</Button>
+                             {/* <Button style={{ marginLeft: 8 }} >重置</Button>*/}
+                              <a style={{ marginLeft: 8 }} onClick={this.collapseList}>
+                                展开 <Icon type="down" />
+                              </a>
+                            </span>
                         </div>
-                    </HCol>
-                </HRow>
-                
-            </Form>
-        )
+                    </Form>)
+        }else{
+            return (
+                <Form layout={layout} onSubmit={this.handleSearch}>
+                    <HRow>
+                        {list.map((item,index)=>{
+                            // console.log(item)
+                            return (<HCol span={4} sm={12} key={index} >
+                                        <FormItem hasFeedback label={item.label}>
+                                            {this.formItemRender(item)}
+                                        </FormItem>
+                                    </HCol>)
+                        })}
+                        <HCol span={4} sm={12} key="searchButton" >
+                            <div className="searchTool" style={{ overflow:'hidden'}}>
+                              <span style={{}}>
+                                <Button type="primary" htmlType="submit">查询</Button>
+                               {/* <Button style={{ marginLeft: 8 }} >重置</Button>*/}
+                                <a style={{ marginLeft: 8 }} onClick={this.collapseList}>
+                                  展开 <Icon type="down" />
+                                </a>
+                              </span>
+                            </div>
+                        </HCol>
+                    </HRow>
+                    
+                </Form>
+            )
+        }
+
+        
     }
 
     /**
@@ -142,12 +173,39 @@ class SearchForm extends PureComponent{
      * @return {[type]}      [description]
      */
     advancedSearchList = (list) => {
-        const { getFieldDecorator,isSmallScrean} = this.props.form;
+        let {isSmallScrean} = this.props;
 
         list = list.filter(item => (!!(item.search) && item.search.open));
-        // console.log(list)
-        return (
-            <Form layout="inline" onSubmit={this.handleSearch}>
+        let layout = isSmallScrean?"vertical":"inline"
+        
+        if(isSmallScrean){
+            return (<Form layout={layout} onSubmit={this.handleSearch}>
+                        {list.map((item,index)=>{
+                            // console.log(item)
+                            return (
+                              <FormItem 
+                                  hasFeedback 
+                                  label={item.label} 
+                                  key={index}>
+                                  {this.formItemRender(item)}
+                              </FormItem>
+                            )
+                        })}
+
+                        <div className="searchTool" style={{ overflow: 'hidden'}}>
+                          <span style={{}}>
+                            <Button type="primary" htmlType="submit">查询</Button>
+                           {/* <Button style={{ marginLeft: 8 }} >重置</Button>*/}
+                            <a style={{ marginLeft: 8 }} onClick={this.collapseList}>
+                              收起 <Icon type="up" />
+                            </a>
+                          </span>
+                        </div>
+                    </Form>)
+        }else{
+          return (
+            <Form layout={layout} onSubmit={this.handleSearch}>
+                
                 <HRow>
                     {list.map((item,index)=>{
                         return (
@@ -158,8 +216,9 @@ class SearchForm extends PureComponent{
                             </HCol>)
                     })}
                 </HRow>
-                <div style={{ overflow: 'hidden'}}>
-                  <span style={{float:(isSmallScrean?"none":"right") ,transition:"all .3s ease-in-out"}}>
+
+                <div className="searchTool" style={{ overflow: 'hidden'}}>
+                  <span style={{}}>
                     <Button type="primary" htmlType="submit">查询</Button>
                    {/* <Button style={{ marginLeft: 8 }} >重置</Button>*/}
                     <a style={{ marginLeft: 8 }} onClick={this.collapseList}>
@@ -168,7 +227,9 @@ class SearchForm extends PureComponent{
                   </span>
                 </div>
             </Form>
-        )
+          )
+        }
+        
     }
 
     /**
@@ -177,14 +238,17 @@ class SearchForm extends PureComponent{
      * @return {[type]}      [description]
      */
     renderSearchList = (list) => { 
-        return (this.state.collapse)?this.simpleSearchList(list):this.advancedSearchList(list);
+
+        return (this.state.collapse)?
+                this.simpleSearchList(list):
+                this.advancedSearchList(list);
     }
 
     render(){
-        let { slist } = this.props;
-
+        let { slist,isSmallScrean} = this.props;
+        // console.log(isSmallScrean)
         return (
-            <div className="searchForm">  
+            <div className={classnames({"searchForm":true,"smallScreanSearch":isSmallScrean})}>  
                 {this.renderSearchList(slist)}      
             </div>
         )

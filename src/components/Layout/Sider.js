@@ -45,8 +45,9 @@ class Sider  extends PureComponent{
     
     
     /*通过这个树状结构再生成树状环境*/
-    getMenu(menuTree,siderFold,type="0") {
-        // console.log(siderFold)
+    getMenu = (menuTree,siderFold,type="0") => {
+        let { loadingEffects } = this.props;
+
         return menuTree.map((item,index)=>{
 
             if(item.children){
@@ -68,6 +69,8 @@ class Sider  extends PureComponent{
                         <Link to={item.route}>
                             {item.icon && <Icon type={item.icon} />}
                             {(!siderFold || type == 2) && item.name}
+
+                           {/* {loadingEffects[`${loadingEffects[item.route]}/query`]}*/}
                         </Link>
                     </Menu.Item>
                 )

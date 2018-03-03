@@ -6,6 +6,7 @@ import Cookies from 'js-cookie';
 import classnames from 'classnames';
 import "./app.less";
 
+import Loader from 'components/Loader';
 
 const {Sider,Header,Bread} = Layout;
 
@@ -13,15 +14,19 @@ const App = ({children,dispatch,app,loading,location}) => {
     
     const token = Cookies.get('u_Tok');
    
-    let {siderFold,menus,user,currentPath,isNavbar,openKeys} = app
+    let {siderFold,menus,user,currentPath,isNavbar,openKeys,isSmallScrean} = app
 
     // console.log(siderFold)
     // 还没登录就跳转到登录框
     // console.log(!token || location.pathname == '/login')
-    // console.log(app);
+    // console.log(app);<Loader spinning/>
+    
+
+
     if(!token || location.pathname == '/login'){   
         return (
-            <div className="wrapper">
+            <div className={classnames({wrapper:true})}>
+                <Loader spinning={loading.effects['app/query']}/>
                 {children}
             </div>
         )
@@ -31,6 +36,7 @@ const App = ({children,dispatch,app,loading,location}) => {
         menu:menus, 
         siderFold ,
         isNavbar,
+        loadingEffects:loading.effects,
         handleClick(item, key, keyPath){
             // Cookies.set('currentPath',keyPath);
             dispatch({type:'app/updateState',payload:{currentPath:keyPath}})  
@@ -61,12 +67,12 @@ const App = ({children,dispatch,app,loading,location}) => {
         },
     }
 
-    // console.log(isNavbar)
+    // console.log(loading)
 
 
     return (
         <div className="wrapper">
-            
+            <Loader spinning={loading.effects['app/logout']}/>
             <Sider {...siderProp}/>
             {isNavbar && (!siderFold)?(<div className="drawer-bg" onClick={drawerBgProps.switchSider}></div>):''}
             
@@ -77,7 +83,7 @@ const App = ({children,dispatch,app,loading,location}) => {
                 style={((!isNavbar)&&siderFold)?{marginLeft:"45px"}:{}}>
                 <Header {...headerProps}/>
                 <Bread {...breadProps}/>
-                <div className="content">
+                <div className="content" style={isSmallScrean?{margin:"24px auto"}:{}}>
                     {children}
                 </div>
             </div>

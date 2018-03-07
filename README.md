@@ -87,6 +87,13 @@ npm run build
 npm run lint
 ```
 
+
+## 部分API接口
+- indexPage的图片轮播使用了网易云的API接口
+
+- 使用方法及地址：https://github.com/kkkkzero00/NeteaseCloudMusicApi
+
+
 ## 参考
 
 用户列表：<https://github.com/dvajs/dva/tree/master/examples/user-dashboard>

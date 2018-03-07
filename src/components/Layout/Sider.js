@@ -2,7 +2,7 @@ import {Component,PureComponent} from 'react';
 
 import PropTypes from 'prop-types';
 import config from 'utils/config';
-import {Menu,Icon} from 'antd';
+import {Menu ,Icon ,Spin} from 'antd';
 import lodash from 'lodash';
 import { Link } from 'dva/router';
 import {arrayToTree} from 'utils/commonFunc';
@@ -14,7 +14,7 @@ import classnames from 'classnames'
 const SubMenu = Menu.SubMenu;
 const MenuItem = Menu.Item;
 
-
+const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
 
 
 class Sider  extends PureComponent{
@@ -27,6 +27,7 @@ class Sider  extends PureComponent{
         menu = menu.filter((item) => {
             return item.type != 'url';
         })
+
         let menuTree = arrayToTree(menu);
 
         this.state = {
@@ -64,13 +65,16 @@ class Sider  extends PureComponent{
                     </SubMenu>
                 )
             }else{
+
+                let isShowSpining = (!!(item.model) && loadingEffects[`${item.model}/query`]);
+                // console.log(loadingEffects[`${item.model}/query`]);
+
                 return (
                     <Menu.Item key={item.id}>
                         <Link to={item.route}>
                             {item.icon && <Icon type={item.icon} />}
                             {(!siderFold || type == 2) && item.name}
-
-                           {/* {loadingEffects[`${loadingEffects[item.route]}/query`]}*/}
+                            {isShowSpining?<Spin style={{float:"right",paddingTop:9}}/>:''}
                         </Link>
                     </Menu.Item>
                 )

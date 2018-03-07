@@ -144,7 +144,7 @@ const IndexPage = ({indexPage,dispatch}) => {
 
     // const carouselProps2 = getCarouselProps(carousel,1);
 
-    // const carouselProps = getCarouselProps(carousel,0);
+    const carouselProps = getCarouselProps(carousel,0);
 
     return (
         <div className="indexPage">
@@ -152,7 +152,7 @@ const IndexPage = ({indexPage,dispatch}) => {
 
            {/* <Button type="primary" onClick={crossDomain}>跨域测试</Button> */}
 
-          {/* {carousel.albums.length?<Carousel {...carouselProps}/>: <Spin tip="Loading..."/>}*/}
+           {carousel.albums.length?<Carousel {...carouselProps}/>: <Spin tip="Loading..."/>}
           
         </div>
     )

@@ -9,6 +9,7 @@ let database = [
     icon: 'laptop',
     name: 'Index',
     route: '/indexPage',
+    model:'indexPage',
     type:'system'
   },
   {
@@ -18,6 +19,7 @@ let database = [
     name: 'Users',
     icon: 'user',
     route: '/users',
+    model:'users',
     type:'system'
   },
   {
@@ -27,6 +29,7 @@ let database = [
     name: 'Posts',
     icon: 'shopping-cart',
     route: '/post',
+    model:'post',
     type:'nav'
   },
   {
@@ -35,6 +38,7 @@ let database = [
     path:'21-2',
     name: 'User Detail',
     route: '/users/:id',
+    model:'user',
     type:'url'
   },
   {
@@ -44,6 +48,7 @@ let database = [
     name: 'Request',
     icon: 'api',
     route: '/request',
+    model:'request',
     type:'nav'
   },
   {
@@ -61,6 +66,7 @@ let database = [
     name: 'IconFont',
     icon: 'heart-o',
     route: '/UIElement/iconfont',
+    model:'iconfont',
     type:'menu'
   },
   {
@@ -70,6 +76,7 @@ let database = [
     name: 'DataTable',
     icon: 'database',
     route: '/UIElement/dataTable',
+    model: 'dataTable',
     type:'menu'
   },
   {
@@ -79,6 +86,7 @@ let database = [
     name: 'DropOption',
     icon: 'bars',
     route: '/UIElement/dropOption',
+    model:'dropOption',
     type:'menu'
   },
   {
@@ -88,6 +96,7 @@ let database = [
     name: 'Search',
     icon: 'search',
     route: '/UIElement/search',
+    model:'search',
     type:'menu'
   },
   {
@@ -97,6 +106,7 @@ let database = [
     name: 'Editor',
     icon: 'edit',
     route: '/UIElement/editor',
+    model:'editor',
     type:'menu'
   },
   {
@@ -106,6 +116,7 @@ let database = [
     name: 'layer (Function)',
     icon: 'credit-card',
     route: '/UIElement/layer',
+    model:'layer',
     type:'menu'
   },
   {
@@ -123,6 +134,7 @@ let database = [
     name: 'LineChart',
     icon: 'line-chart',
     route: '/charts/lineChart',
+    model:'lineChart',
     type:'menu'
   },
   {
@@ -132,6 +144,7 @@ let database = [
     name: 'BarChart',
     icon: 'bar-chart',
     route: '/charts/barChart',
+    model:'barChart',
     type:'menu'
   },
   {
@@ -141,6 +154,7 @@ let database = [
     name: 'AreaChart',
     icon: 'area-chart',
     route: '/charts/areaChart',
+    model:'areaChart',
     type:'menu'
   },
   {
@@ -157,6 +171,7 @@ let database = [
     path:'61-6',
     name: 'Test Navigation1',
     route: '/navigation/navigation1',
+    model:'navigation1',
     type:'menu'
   },
   {
@@ -165,24 +180,26 @@ let database = [
     path:'62-6',
     name: 'Test Navigation2',
     route: '/navigation/navigation2',
+    model: 'navigation2',
     type:'menu'
   },
-  {
-    id: '621',
-    pid: '62',
-    path:'621-62-6',
-    name: 'Test Navigation21',
-    route: '/navigation/navigation2/navigation1',
-    type:'url'
-  },
-  {
-    id: '622',
-    pid: '62',
-    path:'622-62-6',
-    name: 'Test Navigation22',
-    route: '/navigation/navigation2/navigation2',
-    type:'url'
-  },
+  // {
+  //   id: '621',
+  //   pid: '62',
+  //   path:'621-62-6',
+  //   name: 'Test Navigation21',
+  //   route: '/navigation/navigation2/navigation1',
+  //   model: 'navigation1',
+  //   type:'url'
+  // },
+  // {
+  //   id: '622',
+  //   pid: '62',
+  //   path:'622-62-6',
+  //   name: 'Test Navigation22',
+  //   route: '/navigation/navigation2/navigation2',
+  //   type:'url'
+  // },
 ]
 
 module.exports = {

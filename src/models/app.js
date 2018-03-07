@@ -106,7 +106,7 @@ export default {
                 /*注册到全局也就是app的state里面*/
                 Cookies.set('userInfo',{menus,user},{expires: 1 })
                 // console.log(JSON.parse(Cookies.get('userInfo')));
-
+                
                 yield put({
                     type:"updateState",
                     payload:{

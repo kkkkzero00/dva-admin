@@ -33,13 +33,14 @@ const Login = ({login,dispatch,form:{getFieldDecorator,validateFieldsAndScroll}}
                 </div>
                 <Form>
                     <FormItem hasFeedback>
-                        {getFieldDecorator('username',{
+                        {getFieldDecorator('account',{
                             rules:[
                                 {
-                                    required:true
+                                    required:true,
+    
                                 }
                             ]
-                        })(<Input size="large" onPressEnter={handleOk} placeholder="Username" />)}
+                        })(<Input size="large" onPressEnter={handleOk} placeholder="管理员账号" />)}
                     </FormItem>
 
                     <FormItem hasFeedback>
@@ -49,7 +50,7 @@ const Login = ({login,dispatch,form:{getFieldDecorator,validateFieldsAndScroll}}
                                     required:true,
                                 }
                             ]
-                        })(<Input size="large" onPressEnter={handleOk} placeholder="Password" />)}
+                        })(<Input size="large" onPressEnter={handleOk} placeholder="管理员密码" />)}
                     </FormItem>
 
                     <div className="message" style={{width:"100%"}}>

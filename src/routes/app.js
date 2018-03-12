@@ -14,7 +14,7 @@ const App = ({children,dispatch,app,loading,location}) => {
     
     const token = Cookies.get('u_Tok');
    
-    let {siderFold,menus,user,currentPath,isNavbar,openKeys,isSmallScrean} = app
+    let {siderFold,menus,userInfo,currentPath,isNavbar,openKeys,isSmallScrean} = app
 
     // console.log(siderFold)
     // 还没登录就跳转到登录框
@@ -37,13 +37,15 @@ const App = ({children,dispatch,app,loading,location}) => {
         siderFold ,
         isNavbar,
         loadingEffects:loading.effects,
-        handleClick(item, key, keyPath){
-            // Cookies.set('currentPath',keyPath);
+        handleClick(item, key, keyPath){    
+            Cookies.set('currentPath',keyPath);
             dispatch({type:'app/updateState',payload:{currentPath:keyPath}})  
         }
     };
+    // console.log(app);
+
     const headerProps = {
-        user,
+        userInfo,
         menus,
         isNavbar,
         switchSider(){

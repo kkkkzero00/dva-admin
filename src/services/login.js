@@ -1,11 +1,18 @@
 import request from 'utils/request';
 import config from 'utils/config'
-const {api} = config;
+const {isUseMock} = config;
+let api;
+
+if(!isUseMock){
+    api = config.api2;
+}else{
+    api = config.api;
+}
 
 export async function query(data) {
-  // console.log(dsata)
+  // console.log(data)
   let params = {
-    url:api.login,
+    url:api.checkUserExist,
     method:'post',
     data
   }

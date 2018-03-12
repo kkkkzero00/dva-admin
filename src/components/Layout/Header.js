@@ -5,8 +5,8 @@ import headerStyle from './Header.less'
 
 const SubMenu = Menu.SubMenu;
 
-const Header = ({user,menu,isNavbar,switchSider,logout}) => {
-    // console.log(user)
+const Header = ({userInfo,menu,isNavbar,switchSider,logout}) => {
+    // console.log(userInfo)
     const handleClick = ({ item, key, keyPath }) => {
          key === 'logout' && logout();
     }
@@ -26,7 +26,7 @@ const Header = ({user,menu,isNavbar,switchSider,logout}) => {
                 <Menu
                     onClick={handleClick}
                     mode="horizontal">
-                    <SubMenu title={<span><Icon type="user" />{user.username}</span>}>
+                    <SubMenu title={<span><Icon type="user" />{userInfo.name}</span>}>
                         <Menu.Item key="logout">logout</Menu.Item>
                     </SubMenu>
                 </Menu>

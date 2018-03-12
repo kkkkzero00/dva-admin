@@ -3,53 +3,10 @@ import axios from 'axios';
 import lodash from 'lodash';
 import pathToRegexp from 'path-to-regexp';
 import {message} from 'antd';
+import qs from 'qs';
 
+axios.defaults.withCredentials = true;
 
-const success = (response) => {
-  
-  
-  const { statusText, status } = response
-
-  let success = false;
-  if (response.status >= 200 && response.status < 300) {
-      success = true;
-  }
-
-  // const error = new Error(response.statusText);
-  // error.response = response;
-  // throw error;
-  // console.log(success)
-
-
-  return {
-    success:success,
-    message:statusText,
-    statusCode:status,
-    ...data
-  }
-}
-
-
-const fail = (error) => {
-  console.log(error)
-  const { response } = error;
-  let msg,statusCode;
-
-  if(response && response instanceof Object){
-    const { data, statusText } = response;
-    statusCode = response.status;
-    msg = data.message || statusText
-  }else {
-    statusCode = 600;
-    msg = error.message || 'Network Error'
-  }
-
-  return {
-    success:false,
-    statusCode,
-    message:msg
-  }
-}
 
 const fetch = (options) => {
 
@@ -61,8 +18,14 @@ const fetch = (options) => {
     } = options;
 
     let domin='',cloneData;
+    /*对后台的框架进行请求伪装*/
+    let _method = method.toLowerCase();
 
     cloneData = lodash.cloneDeep(data);
+    if(_method!='get')
+      cloneData = {...cloneData,_method:_method.toUpperCase()};
+
+    // console.log(cloneData);
 
     try{
       if(url.match(/[A-Za-z]+:\/\/[^\/]*/)){
@@ -82,20 +45,22 @@ const fetch = (options) => {
     }
     // console.log(13)
 
-    // console.log(cloneData)
-    switch(method.toLowerCase()){
+    // console.log(JSON.stringify(cloneData))
+    // console.log(method);
+    switch(_method){
       case 'get':
         return axios.get(url,{
           params:cloneData
-        })
+        });
+        break;
       case 'post':
-        return axios.post(url,cloneData);
+        // console.log(123)
+        return axios.post(url,qs.stringify(cloneData));
+        break;
       case 'put':
-        return axios.put(url,cloneData);
+        return axios.put(url,qs.stringify(cloneData));
       case 'delete':
-        return axios.delete(url,{
-          data:cloneData,
-        })
+        return axios.delete(url,{params:qs.stringify(cloneData)});
       case 'patch':
         /*
           PATCH 操作主要用来更新部分资源，而且其不是幂等（所谓的幂等就是每次更新后，结果不变）的。
@@ -120,14 +85,16 @@ export default function request(options) {
     return fetch(options)
          .then((response) => { 
               
-              const { statusText, status } = response
+              const { statusText ,data } = response
 
               let success = false;
+
               if (response.status >= 200 && response.status < 300) {
                   success = true;
               }
+              // console.log(response)
 
-              let data = response.data
+              // console.log(response)
               // const error = new Error(response.statusText);
               // error.response = response;
               // throw error;
@@ -143,11 +110,11 @@ export default function request(options) {
               // })
               // console.log(response)
 
-              // console.log(14)
+                    
               return {
-                success:success,
+                success,
                 message:statusText,
-                statusCode:status,
+                code:response.status,
                 ...data
               }
           }).catch((error) => {

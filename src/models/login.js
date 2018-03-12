@@ -1,6 +1,7 @@
 import {query} from 'services/login'
 import {queryURL} from 'utils/commonFunc'
-
+import Cookies from 'js-cookie';
+import qs from 'qs';
 
 export default {
     namespace:'login',
@@ -18,14 +19,9 @@ export default {
             // console.log(11)
             
             const info = yield call(query,payload);
-
-            // console.log(15)
-
+         
             yield put({type:'hideLoading'});
-            
-            // console.log(16)
 
-            // console.log(info)
             if(info&&info.success){
                 const from = queryURL('from');
                 /*登记信息*/

@@ -15,9 +15,10 @@ const mockjs = require('mockjs');
 
 
 module.exports = {
-    [`POST ${api.login}`] (req,res) {
-        const {username,password} = req.body;
-        const user = userList.filter(item => item.username === username);
+    [`POST ${api.checkUserExist}`] (req,res) {
+
+        const {account,password} = req.body;
+        const user = userList.filter(item => item.id == account);
 
 
         if(user.length>0 && user[0].password == password){
@@ -40,6 +41,14 @@ module.exports = {
                     // httpOnly:true
                 }
             );
+
+            // res.cookie(
+            //     'roles',
+            //     user[0].roleId,
+            //     {
+            //         expire:new Date(expireTime),
+            //     }
+            // );
 
             res.json({success:true,message:'OK'});
         }else{

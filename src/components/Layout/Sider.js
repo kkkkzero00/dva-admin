@@ -31,7 +31,7 @@ class Sider  extends PureComponent{
         let menuTree = arrayToTree(menu);
 
         this.state = {
-            openKeys:['5'],
+            openKeys:['6000'],
             menuTree,
             isNavbar,
             siderFold

@@ -100,6 +100,12 @@ npm run lint
 
 dashboard设计稿：<https://dribbble.com/shots/3108122-Dashboard-Admin> 
 
+## 賬號和密碼
+    account: 123123
+    pw:admin
+
+    account: 456456
+    pw:guest
 
 ## 截图
 

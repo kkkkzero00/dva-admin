@@ -1,4 +1,5 @@
-const { config } = require('./common')
+const { config,userList,Role} = require('./common')
+import qs from 'qs';
 
 const { api } = config
 let database = [
@@ -10,7 +11,7 @@ let database = [
     name: 'Index',
     route: '/indexPage',
     model:'indexPage',
-    type:'system'
+    type:'nav'
   },
   {
     id: '2',
@@ -20,7 +21,7 @@ let database = [
     icon: 'user',
     route: '/users',
     model:'users',
-    type:'system'
+    type:'nav'
   },
   {
     id: '7',
@@ -205,10 +206,50 @@ let database = [
 module.exports = {
 
   [`GET ${api.getMenus}`] (req, res) {
-    const response = {},menus = {};
-    response.success = true;
+    const params = qs.parse(req.query);
+    let {id} = params;
+
+    const response = {};
+    let menus = [];
     
-    response.menus = database;
+
+
+    if(id == 1 || id == 0){
+        menus = database;
+    }else{
+        let role = Role.filter(item => item.id == id)[0];
+        
+        menus = database.filter((item) => {
+            const cases = [
+                role.visit.includes(item.id),
+                item.pid?role.visit.includes(item.pid):true,
+            ];
+            // console.log(cases)
+            return cases.every(_=>_);
+        })
+    } 
+
+    let menuRoutes = [];
+    menus.forEach(item => {
+      if(item.route) menuRoutes.push(item.route)
+    })
+    
+    const now  = Date.now();
+    // console.log(now);
+    /*一天后过期*/
+    let expireTime = (now + 24*60*60*1000);
+    res.cookie(
+                'menuRoutes',
+                 JSON.stringify(menuRoutes),
+                {
+                    expire:new Date(expireTime),
+                }
+            );
+
+    response.success = true;
+
+    response.menus = menus;
+
     res.status(200).json(response)
   },
 }

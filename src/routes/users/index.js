@@ -205,8 +205,7 @@ class Users extends Component {
             title: '创建时间',
             dataIndex: 'createTime',
             key: 'createTime',
-          },
-          
+          },  
       ]
     };
 

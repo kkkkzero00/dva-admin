@@ -71,18 +71,19 @@ module.exports = {
         // let user_id = cookie.u_Tok
         // console.log(cookieArr)
         let response ={} ,user = {}
+        let success = false;
 
         if(!cookieArr.u_Tok){
-            res.status(200).send({message:'Not Login'});
+            res.status(200).send({message:'Not Login',success:false});
             return;
         }
         let token = JSON.parse(cookieArr.u_Tok);
         
         /*验证token有没有过期*/
         if(token)
-            response.success = token.deadline > new Date().getTime()
+            success = token.deadline > new Date().getTime()
         
-        if(response.success){
+        if(success){
             let userInfo = userList.filter(_ => _.id == token.id);
             if(userInfo.length > 0){
                 const role = Role.filter(item => item.id == userInfo[0].roleId);
@@ -93,9 +94,9 @@ module.exports = {
             }
         }
 
-        response.user = user;
+        response.userInfo = user;
 
-        res.json(response);
+        res.json({data:response,success});
     },
 
     [`GET ${api.users}`] (req,res) {
@@ -169,7 +170,7 @@ module.exports = {
         res.status(200).json({message:"新增成功！"});
     },
 
-    [`POST ${api.user}/:id`] (req,res) {
+    [`PUT ${api.user}/:id`] (req,res) {
         // const {id} = req.params;
         
         let {id,...updateItem} = req.body;
@@ -192,9 +193,10 @@ module.exports = {
         }
     },
     [`DELETE ${api.user}`] (req,res) {
-        let {deleteId} = req.body;
-        
-        
+        const params = qs.parse(req.query[0]);
+        let {deleteId} = params;
+        // console.log(deleteId)
+        // console.log(isArray(deleteId))
         if(isArray(deleteId)){
 
             let isExist = deleteId.every((item)=>!!queryTable(userTable,item,'key'))
@@ -219,7 +221,28 @@ module.exports = {
                 res.status(404).json({message:"删除失败，该条数据不存在！"});
             }
         }
- 
+    },
+
+    [`GET ${api.checkAuthRoute}`](req,res){
+        const params = qs.parse(req.query);
+        let {path} = params;
+
+        const cookie = req.headers.cookie;
+        // console.log(cookie);
+        const cookieArr = qs.parse(cookie.replace(/\s/g,''),{delimiter:';'})
+        let {menuRoutes} = cookieArr;
+
+        menuRoutes = JSON.parse(menuRoutes);
+
+        let hasAuth = menuRoutes.filter(item => item == path);
+
+        console.log(hasAuth)
+
+        if(hasAuth.length!=0){
+            res.status(200).json({message:"路径合法！",success:true});
+        }else{
+            res.status(500).json({message:"路径非法！",success:false});
+        }
     }
     
 };

@@ -8,13 +8,16 @@ import lodash from 'lodash';
 
 
 const Bread = ({currentPath,menus}) => {
-    // console.log(currentPath);
-    // console.log(menus )
+    // console.log(currentPath)
 
-    let currMenu = menus.filter(item => currentPath.includes(item.id))
+    currentPath = currentPath.map(item => parseInt(item));
+    // console.log(menus)
+    let currMenu = menus.filter(item => {
+        return currentPath.includes(parseInt(item.id));
+    })
     
     let currP = lodash.cloneDeep(currentPath);
-    
+
 
     const handleClick = (event) => {
        // console.log(event.target)
@@ -25,8 +28,6 @@ const Bread = ({currentPath,menus}) => {
             let breadId = currPath.shift();
 
             let breadItem = currMenu[currMenu.findIndex(item => item.id == breadId)];
-            
-            // console.log(breadItem)
 
             if(breadItem.route){
                 Breads.unshift(<span key={breadItem.id}><Icon type={breadItem.icon} style={{marginRight:4}}/><Link to={breadItem.route}>{breadItem.name}</Link></span>)

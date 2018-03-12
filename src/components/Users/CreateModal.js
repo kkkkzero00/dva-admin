@@ -100,12 +100,12 @@ class CreateModal extends Component {
 
     let formItemLayout = {
       labelCol: {
-        lg: { span: 4 },
-        sm: { span: 6 },
+        lg: { span: 5 },
+        sm: { span: 4 },
         xs: { span: 5 },
       },
       wrapperCol: {
-        lg: { span: 15 },
+        lg: { span: 16 },
         sm: { span: 17 },
         xs: { span: 16 },
       },
@@ -127,7 +127,6 @@ class CreateModal extends Component {
           })}
         </Form>
     )
-
   }
 
 

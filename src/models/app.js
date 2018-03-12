@@ -1,27 +1,19 @@
-import {query,getMenu,logout} from 'services/app'
+import {query,getMenu,logout,checkAuthRoute} from 'services/app'
 import lodash from 'lodash';
 import {routerRedux} from 'dva/router'
 import Cookies from 'js-cookie';
-import config from 'utils/config';
 
+import config from 'utils/config'
+const {isUseMock} = config;
 
 export default {
     namespace:'app',
     state:{
-        permissions:{
-            visit:[]
-        },
-        menus:[
-            {
-                id:1,
-                icon:'laptop',
-                name:'Dashboard',
-                router:'/dashboard'
-            }
-        ],
+        userInfo:{},
+        menus:[],
         //打开是false，关闭是true
         siderFold:localStorage.getItem('siderFold') === 'true',
-        currentPath:["1"],
+        currentPath:[isUseMock?1:"2000"],
         isNavbar: document.body.clientWidth < 800,
         isMiddleScrean:document.body.clientWidth < 800 && document.body.clientWidth > 456,
         isSmallScrean:document.body.clientWidth <= 456,
@@ -34,29 +26,47 @@ export default {
             
             // console.log(Cookies.get('userInfo'))
             if(Cookies.get('userInfo')){
-                let {menus,user} = JSON.parse(Cookies.get('userInfo'));
-                let permissions = {};
-                permissions['visit'] = user.role.visit;
+                let {menus,userInfo} = JSON.parse(Cookies.get('userInfo'));
+                
                 // console.log(JSON.parse(Cookies.get('userInfo')))
                 dispatch({
                     type:'updateState',
                     payload:{
-                        user,
+                        userInfo,
                         menus,
-                        permissions,
                     }
                 })
             }
+            if(Cookies.get('currentPath')){
+                let currentPath = JSON.parse(Cookies.get('currentPath'));
+                dispatch({
+                    type:'updateState',
+                    payload:{
+                        currentPath
+                    }
+                })
+            }
+            
 
 
 
             /*处理面包屑*/
             history.listen(({ pathname }) => {
+
                 // console.log(pathname)
                 let {commonPage} = config;
 
-                if(!commonPage.includes(pathname))
+                if(!commonPage.includes(pathname)){
+                    //验证该用户是否有权限访问某个地址
+                    dispatch({type:"checkAuth",payload:{path:pathname}});
+                    //设置当前路径，用作面包屑
+                
+                    if(pathname == '/'){
+                        pathname = '/indexPage';
+                    }
                     dispatch({type:"setCurrPath",payload:{paths:pathname}});
+                }
+                
             });
 
             
@@ -74,45 +84,36 @@ export default {
         *query({payload},{put,call,select}){
             /*每个函数里面好像还有个location对象*/
            
+            // let token = Cookies.get('u_Tok');
+            let res = yield call(query,payload);
+            let {success,data} = res;         
+            
+            if(success){
+                let menus;
+                let permissions;
+                let userInfo = data.userInfo;
+                // console.log(userInfo)
+                if(isUseMock){
+                    
+                    let {role} = userInfo;
 
-            const {success,user} = yield call(query,payload);
-            // console.log(user)
-          
-        
-            if(success&&user){
-                let {menus} = yield call(getMenu)
-               
-                const {role} = user;
-                let permissions = lodash.cloneDeep(role);
-
-                let list = menus;
-                // console.log(user)
-                // console.log(permissions)
-               
-                if(permissions.id === 1 || permissions.id === 0){
-                    permissions.visit = list.map(item => item.id);
+                    let menusRes = yield call(getMenu,{id:role.id});
+                    
+                    menus = menusRes.menus;
                 }else{
-                    menus = list.filter((item) => {
-                        const cases = [
-                            permissions.visit.includes(item.id),
-                            item.pid?permissions.visit.includes(item.pid):true,
-                        ];
-                        // console.log(cases)
-                        return cases.every(_=>_);
-                    })
-                } 
-                // console.log(menus)
+                    menus = data.menus;
+                }       
+  
 
-                /*注册到全局也就是app的state里面*/
-                Cookies.set('userInfo',{menus,user},{expires: 1 })
+                Cookies.set('userInfo',{menus,userInfo},{expires: 1 })
                 // console.log(JSON.parse(Cookies.get('userInfo')));
                 
+                /*注册到全局也就是app的state里面*/
                 yield put({
                     type:"updateState",
                     payload:{
-                        user,
+                        userInfo,
                         menus,
-                        permissions,
                     }
                 })
 
@@ -142,9 +143,6 @@ export default {
         },
 
         *checkLogin({payload},{put,select}){
-            const {app} = yield select()
-            let {user} = app;
-
             const token = Cookies.get('u_Tok');
             // console.log(!token || location.pathname == '/login')
             if(!token || location.pathname == '/login'){
@@ -153,9 +151,13 @@ export default {
         },
 
         *logout({payload},{put,call}){
+          
             let res = yield call(logout);
 
+            // console.log(res)
             if(res.success){
+                Cookies.remove('userInfo');
+
                 yield put({type:"checkLogin"});
                 yield put({
                     type:'login/updateState',
@@ -174,6 +176,8 @@ export default {
             let paths = payload.paths;
             
             let currP = menus.filter(item => item.route === paths)[0];
+
+            // console.log(currP)
             let keyPath = currP.path.split("-");
 
             yield put({
@@ -191,6 +195,14 @@ export default {
             yield put({ type: 'updateState', payload:{ isNavbar, isSmallScrean:isNavbar}})
           }
         },
+
+        *checkAuth ({payload}, { put, call }){
+            let res = yield call(checkAuthRoute,{...payload});
+            // console.log(res);
+            if(!res.success){
+                yield put(routerRedux.push('/error'));
+            }
+        }
     },
 
     reducers:{

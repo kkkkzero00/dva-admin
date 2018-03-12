@@ -73,6 +73,14 @@ function RouterConfig({ history,app }) {
 
                 },
                 {
+                  path: 'error',
+                  getComponent (nextState, cb) {
+                    require.ensure([], require => {
+                      cb(null, require('./routes/error/'))
+                    }, 'error')
+                  },
+                },
+                {
                   path: '*',
                   getComponent (nextState, cb) {
                     require.ensure([], require => {
@@ -80,6 +88,7 @@ function RouterConfig({ history,app }) {
                     }, 'error')
                   },
                 },
+                
 
             ]
     }]

@@ -4,7 +4,15 @@ import qs from 'qs';
 
 import config from 'utils/config'
 
-const {api} = config;
+const {isUseMock} = config;
+let api;
+
+if(!isUseMock){
+    api = config.api2;
+}else{
+    api = config.api;
+}
+
 
 /*请求数据*/
 export async function query(data){
@@ -50,7 +58,7 @@ export async function update(data){
 
     let params = {
         url:api.user+"/:id",
-        method:'post',
+        method:'put',
         data
     }
    
@@ -58,7 +66,7 @@ export async function update(data){
 }
 
 export async function remove(data){
-
+    // console.log(data)
     let params = {
         url:api.user,
         method:'delete',

@@ -109,7 +109,12 @@ dashboard设计稿：<https://dribbble.com/shots/3108122-Dashboard-Admin>
 
 ## 截图
 
-![](public/demo1.png)
+![](public/demo3.gif)
 
+手機端
+![](public/demo4.png)
+
+客戶端
+![](public/demo1.png)
 
 ![](public/demo2.png)

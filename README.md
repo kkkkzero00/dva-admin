@@ -109,12 +109,12 @@ dashboard设计稿：<https://dribbble.com/shots/3108122-Dashboard-Admin>
 
 ## 截图
 
-![](public/demo3.gif)
+![](http://p5xjqxkm5.bkt.clouddn.com/dva-demo3.gif)
 
-手機端
-![](public/demo4.png)
+### 手機端
+![](http://p5xjqxkm5.bkt.clouddn.com/dva-demo4.png)
 
-客戶端
-![](public/demo1.png)
+### 客戶端
+![](http://p5xjqxkm5.bkt.clouddn.com/dva-demo1.png)
 
-![](public/demo2.png)
+![](http://p5xjqxkm5.bkt.clouddn.com/dva-demo2.png)

@@ -6,17 +6,48 @@
 </head>
 <body>
     <script type="text/javascript">
-        function hjk(hjk){
-            console.log('hjk')
-        };
+       //  function hjk(hjk){
+       //      console.log('hjk')
+       //  };
 
 
-        let obj = {
-            callback:'hjk'
-        }
+       //  let obj = {
+       //      callback:'hjk'
+       //  }
 
 
-       obj['callback'];
+       // obj['callback'];
+
+       let obj = {
+            name:"hjk",
+            anctor:()=>{
+                console.log(this)
+            }
+       }
+       let anctor = () =>{
+            console.log(this)
+       }
+
+
+       anctor.call(obj);
+       // anctor();
+       obj.anctor.call(obj);
+       // obj.anctor();
+       
+       class A {
+
+            constructor(){
+                this.name = "hjk"
+                this.func = this.func.bind(obj)
+            }
+
+            func(){
+                console.log(this)
+            }
+       }
+
+       let a = new A();
+       a.func();
     </script>
 </body>
 </html>

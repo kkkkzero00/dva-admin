@@ -26,6 +26,7 @@
     "dora": "^0.5.0",
     "dora-plugin-proxy": "^0.8.5",
     "dva-loading": "^1.0.4",
+    "echarts": "^4.0.4",
     "eslint": "^3.12.2",
     "eslint-config-airbnb": "^13.0.0",
     "eslint-plugin-import": "^2.2.0",

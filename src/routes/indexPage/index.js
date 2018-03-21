@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'dva';
 import { Button, Row, Form, Input, Alert,Icon,Spin } from 'antd';
 import {SelectBox,Carousel,Carousel2} from 'components/IndexPage';
-
+import {HRow,HCol} from 'components/Grid';
 import './indexPage.less';
 
 
@@ -148,15 +148,37 @@ const IndexPage = ({indexPage,dispatch}) => {
 
     return (
         <div className="indexPage">
-           {/* <SelectBox {...selectBoxProps}/> */}
+          <HRow>
+              <div className="row1">
+                <div className="revenue"> 
+                  Revenue
+                </div>
 
-           {/* <Button type="primary" onClick={crossDomain}>跨域测试</Button> */}
+                <div className="product-order"> 
+                  Revenue
+                </div>
 
-           {carousel.albums.length?<Carousel {...carouselProps}/>: <Spin tip="Loading..."/>}
-          
+                <div className="tags"> 
+                  tags
+                </div>
+              </div>
+          </HRow>
+
+          <HRow>
+              <span >inline element</span>
+          </HRow>
         </div>
     )
 }
+
+
+/* 
+  <SelectBox {...selectBoxProps}/> 
+
+  <Button type="primary" onClick={crossDomain}>跨域测试</Button>
+
+  {carousel.albums.length?<Carousel {...carouselProps}/>: <Spin tip="Loading..."/>}
+*/
 
 IndexPage.propTypes = {
     indexPage:PropTypes.object,

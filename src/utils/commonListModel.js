@@ -88,7 +88,6 @@ function commonListModel(model){
 
             },
             *create({payload},{call,put,select}){
-                // console.log(payload)
 
                 let submitStatus = {type:3,message:'正在提交，请耐心等待。'};
                 yield put({type:"updateStatus",payload:{submitStatus}});
@@ -114,7 +113,7 @@ function commonListModel(model){
             *update({payload},{call,put,select}){
                 let submitStatus = {type:3,message:'正在提交，请耐心等待。'};
                 yield put({type:"updateStatus",payload:{submitStatus}});
-
+                // console.log(123)
                 let res = yield call(update,payload);
 
                 let {message} = res;
@@ -182,7 +181,7 @@ function commonListModel(model){
     }
 
     defaultModel =  assign(defaultModel, model); 
-
+    // console.log(defaultModel);
     return defaultModel;  
 }
 

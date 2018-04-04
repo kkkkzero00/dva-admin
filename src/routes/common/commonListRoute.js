@@ -4,7 +4,11 @@ import { connect } from 'dva';
 import { Link } from 'dva/router';
 
 import { Button, Row, Form, Input, Alert ,Icon ,Modal ,Select ,DatePicker ,InputNumber ,Spin} from 'antd';
+
 import moment from 'moment';
+import 'moment/locale/zh-cn';
+moment.locale('zh-cn');
+
 import axios from 'axios';
 import config from 'utils/config';
 
@@ -109,6 +113,7 @@ class CommonListRoute extends Component {
                 return <RangePicker
                         size={inputSize}
                         style={{width:'auto'}}
+                        showTime={true}
                         format="YYYY-MM-DD"
                         placeholder={['开始时间', '结束时间']}/>
 
@@ -145,11 +150,14 @@ class CommonListRoute extends Component {
                 if(formType == 'search'){
                     let initialCreateTime = [];
                     // console.log(name);
+                    
 
-                    if({}.hasOwnProperty.call(formVal,name) && formVal[name].length!=0){
+                    if(formVal.hasOwnProperty(name) && formVal[name].length!=0){
 
-                        if(formVal.createTime[0]) initialCreateTime[0] = moment(formVal.createTime[0]);
-                        if(formVal.createTime[1]) initialCreateTime[1] = moment(formVal.createTime[1]);
+                        if(formVal[name][0]) initialCreateTime[0] = moment(formVal[name][0]).format();
+                        if(formVal[name][1]) initialCreateTime[1] = moment(formVal[name][1]).format();
+
+                        // console.log(initialCreateTime);
                     }else{
                         // let now = (new Date).getTime();
                         // console.log(now);
@@ -255,6 +263,8 @@ class CommonListRoute extends Component {
               self.setState({
                 formVal
               })
+              // console.log(formVal);
+
               dispatch({type:`${namespace}/query`,payload:{currPage:1,pageSize,...formVal}});
           },
         }
@@ -368,7 +378,7 @@ class CommonListRoute extends Component {
               data = {id:currentRow.key,_pk:currentRow.id,...data}
 
             } 
-            // console.log(data)
+            // console.log(`${namespace}/${action}`);
 
             data['token'] = token;
             // console.log(data);

@@ -34,15 +34,21 @@ export default class CommonServices {
 
         if(otherParams){
             Object.keys(otherParams).forEach((item) => {
+                // console.log(otherParams[item]);
+
                 searchParams.push((item+'='+otherParams[item]))
             })
         }
 
         searchParams = searchParams.join('&');
-        // console.log(searchParams);
+
+        /*特殊字符要进行ascii转义，防止浏览器解析url时将其转换 如 '+'会转成 ' '*/
+        searchParams = searchParams.replace(/[\+|\?|\/|\#]/g,function(m){
+            return "%"+m.charCodeAt().toString(16);
+        });
 
         let finalUrl = api[this.apiName]+'/lists'+'?'+searchParams;
-        // console.log(finalUrl);
+   
 
         let params = {
             url:finalUrl,
@@ -80,9 +86,8 @@ export default class CommonServices {
 
     /*更新数据*/
     async  update(data){
-
         let params = {
-            url:api[this.apiName]+"/:id",
+            url:api[this.apiName]+"/"+data.id,
             method:'put',
             data
         }

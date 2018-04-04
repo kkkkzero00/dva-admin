@@ -89,11 +89,21 @@ npm run build
 ```bash
 npm run lint
 ```
+代码配置
+```
+    前台 ： model 调用 commonListModel方法 调取公共model ，namespace要指定
+       detailModel 调用 createDetail namespace 和上面的一致
+         service 继承 commonServices 类 实现公共 service ，参数是model的namespace
+     
+    UI部分：  继承 CommonListRoute 方法
+```
 
+## 后台配置
 
-## 后台
 该框架目前需要连接thinkphp5 框架的后台
-后台逻辑处理部分 请移步到这个路径 <https://github.com/kkkkzero00/TP5Admin> 配合使用
+
+后台逻辑处理部分 请移步到此项目 <https://github.com/kkkkzero00/TP5Admin> 配合使用
+
 
 
 

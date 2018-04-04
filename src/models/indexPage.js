@@ -22,10 +22,10 @@ export default {
     setup({ dispatch, history }) {  // eslint-disable-line
 
       if (location.pathname == '/' || location.pathname == '/indexPage') {
-        dispatch({
-          type:'getCarouselItem',
-          payload:{offset:0,limit:15,direct:2}
-        });
+        // dispatch({
+        //   type:'getCarouselItem',
+        //   payload:{offset:0,limit:15,direct:2}
+        // });
       }
     },
   },

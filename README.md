@@ -14,11 +14,14 @@
 
 ## 特性
 
+-   仅需几步简单配置就能调出一个CURD页面！
+
 -   基于[react](https://github.com/facebook/react)，[ant-design](https://github.com/ant-design/ant-design)，[dva](https://github.com/dvajs/dva)，[Mock](https://github.com/nuysoft/Mock) 实现的企业级后台管理系统
 -   基于Ant design UI框架，提供后台管理系统常见使用场景。
 -   基于[dva](https://github.com/dvajs/dva)实现根据路由动态加载model，组件。
 -   使用[roadhog](https://github.com/sorrycc/roadhog)本地调试和构建，使用Mock.js实现后端接口的API，使用RESTFUL架构进行前后端数据通信。
 -   浅度响应式设计。
+
 
 
 
@@ -54,7 +57,7 @@
 
 -   components：组件（方法）为单位以文件夹保存，文件夹名组件首字母大写（如`DataTable`），方法首字母小写（如`layer`）,文件夹内主文件与文件夹同名，多文件以`index.js`导出对象（如`./src/components/Layout`）。
 
--   routes：页面为单位以文件夹保存，文件夹名首字母小写（特殊除外，如`UIElement`）,文件夹内主文件以`index.js`导出，多文件时可建立`components`文件夹（如`./src/routes/dashboard`），如果有子路由，依次按照路由层次建立文件夹（如`./src/routes/UIElement`）。
+-   routes：页面为单位以文件夹保存，文件夹名首字母小写（特殊除外，如`UIElement`）,文件夹内主文件以`index.js`导出，多文件时可建立`components`文件夹（如`./src/routes/users/`），如果有子路由，依次按照路由层次建立文件夹（如`./src/routes/UIElement`）。
 
 ### 快速开始
 
@@ -88,10 +91,10 @@ npm run lint
 ```
 
 
-## 部分API接口
-- indexPage的图片轮播使用了网易云的API接口
+## 后台
+该框架目前需要连接thinkphp5 框架的后台
+后台逻辑处理部分 请移步到这个路径 <https://github.com/kkkkzero00/TP5Admin> 配合使用
 
-- 使用方法及地址：https://github.com/kkkkzero00/NeteaseCloudMusicApi
 
 
 ## 参考

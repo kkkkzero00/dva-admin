@@ -24,15 +24,17 @@ const Bread = ({currentPath,menus}) => {
     }
     const getBread = (currPath,currMenu) => {
         let Breads = [];
+
+        // console.log(currPath)
         while(currPath.length > 0){
             let breadId = currPath.shift();
 
             let breadItem = currMenu[currMenu.findIndex(item => item.id == breadId)];
 
             if(breadItem.route){
-                Breads.unshift(<span key={breadItem.id}><Icon type={breadItem.icon} style={{marginRight:4}}/><Link to={breadItem.route}>{breadItem.name}</Link></span>)
+                Breads.unshift(<span key={breadItem.id}><Link to={breadItem.route}>{ ((currPath.length)?" / ":"") + breadItem.name}</Link></span>)
             }else{
-                Breads.unshift(<span key={breadItem.id}><Icon type={breadItem.icon} style={{marginRight:4}}/><span>{breadItem.name + " / "}</span></span>)
+                Breads.unshift(<span key={breadItem.id}><span>{breadItem.name}</span></span>)
             }
         }
         // console.log(Breads)

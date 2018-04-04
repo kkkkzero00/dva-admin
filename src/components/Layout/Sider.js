@@ -25,7 +25,7 @@ class Sider  extends PureComponent{
         let {menu,siderFold,isNavbar} = props;
 
         menu = menu.filter((item) => {
-            return item.type != 'url';
+            return (item.type != 'url' && item.type != 'detail');
         })
 
         let menuTree = arrayToTree(menu);

@@ -53,6 +53,8 @@ const Login = ({login,dispatch,form:{getFieldDecorator,validateFieldsAndScroll}}
                         })(<Input size="large" onPressEnter={handleOk} placeholder="管理员密码" />)}
                     </FormItem>
 
+                    
+
                     <div className="message" style={{width:"100%"}}>
                         {(()=>{   
                             // console.log(login.hasTriggerLogin)

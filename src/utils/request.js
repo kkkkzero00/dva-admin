@@ -4,6 +4,9 @@ import lodash from 'lodash';
 import pathToRegexp from 'path-to-regexp';
 import {message} from 'antd';
 import qs from 'qs';
+import config from 'utils/config';
+
+
 
 axios.defaults.withCredentials = true;
 
@@ -27,18 +30,21 @@ const fetch = (options) => {
 
     // console.log(cloneData);
 
-    try{
-      if(url.match(/[A-Za-z]+:\/\/[^\/]*/)){
-        domin = url.match(/[A-Za-z]+:\/\/[^\/]*/)[0];
-        url = url.slice(domin.length)
-      }
-      
-      url = pathToRegexp.compile(url)(data);
-      url = domin + url;
+    if(config.isUseMock){
+        try{
+          if(url.match(/[A-Za-z]+:\/\/[^\/]*/)){
+            domin = url.match(/[A-Za-z]+:\/\/[^\/]*/)[0];
+            url = url.slice(domin.length)
+          }
+          
+          url = pathToRegexp.compile(url)(data);
+          url = domin + url;
 
-    }catch(e){
-      message.error(e.message);
+        }catch(e){
+          message.error(e.message);
+        }
     }
+
 
     if(fetchType == 'JSONP'){
 
@@ -49,6 +55,7 @@ const fetch = (options) => {
     // console.log(method);
     switch(_method){
       case 'get':
+        // console.log(url);
         return axios.get(url,{
           params:cloneData
         });
@@ -58,15 +65,19 @@ const fetch = (options) => {
         return axios.post(url,qs.stringify(cloneData));
         break;
       case 'put':
+        // console.log(cloneData);
         return axios.put(url,qs.stringify(cloneData));
+        break;
       case 'delete':
-        return axios.delete(url,{params:qs.stringify(cloneData)});
+        return axios.delete(url,{params:cloneData});
+        break;
       case 'patch':
         /*
           PATCH 操作主要用来更新部分资源，而且其不是幂等（所谓的幂等就是每次更新后，结果不变）的。
           Put操作主要用来更新全部的资源，而且其实幂等的。 
         */
         return axios.patch(url, cloneData);
+        break;
       default:
         return axios(options);
 

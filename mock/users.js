@@ -1,11 +1,15 @@
-'use strict';
+ 'use strict';
 // "start": "dora --plugins \"proxy,webpack,webpack-hmr\"",
 /*的start命令中，可以看到使用 dora 工具的相关内容，其中proxy就是dora的一个插件，
 在你的项目不需要代理的时候，去除proxy插件即可。*/
 
 const qs = require('qs');
+const crypto = require('crypto');
+
+const form_token = 'sdfhjrt';
 const {config,userList,Role} = require('./common');
 const {api} = config;
+
 
 //引入mock.js
 const mockjs = require('mockjs');
@@ -63,6 +67,14 @@ let database = mockjs.mock({
 
 let userTable = database.data;
 
+function checkToken(token,cookies){
+    const cookieArr = qs.parse(cookies.replace(/\s/g,''),{delimiter:';'});
+    const {formToken} = cookieArr;
+    // console.log(token)
+    // console.log(formToken)
+    return formToken == token;
+}
+
 module.exports = {
     [`GET ${api.userPermission}`] (req,res) {
         const cookie = req.headers.cookie;
@@ -98,8 +110,44 @@ module.exports = {
 
         res.json({data:response,success});
     },
+    [`GET ${api.getToken}`] (req,res) {
+        
+
+        const cookieArr = qs.parse(req.headers.cookie.replace(/\s/g,''),{delimiter:';'});
+        const {formToken} = cookieArr;
+        let token ;
+
+        if(!formToken){
+            const now  = Date.now();
+            // console.log(now);
+            /*30分钟后过期*/
+            let expireTime = (now + 30*60*1000);
+            let md5 = crypto.createHash('md5');
+            token = md5.update(form_token+expireTime).digest('hex');
+            res.cookie(
+                'formToken',
+                token,
+                {
+                    expire:new Date(expireTime),
+                    maxAge:9000000,
+                    // httpOnly:true
+                }
+            );
+        }
+        else{
+            token = formToken;
+        }
+        
+        
+
+        res.status(200).json({
+            success:true,
+            data:token,
+        });
+    },
 
     [`GET ${api.users}`] (req,res) {
+
         // console.log(req)
         const params = qs.parse(req.query);
         let {currPage,pageSize,...otherParams} = params;
@@ -161,13 +209,22 @@ module.exports = {
 
     [`POST ${api.user}`] (req,res) {
         const newItem = req.body;
-        newItem.createTime = mockjs.mock('@now');
-        newItem.avatar = newItem.avatar || mockjs.Random.image('100x100', mockjs.Random.color(), '#757575', 'png');
-        newItem.key = mockjs.mock('@id');
 
-        userTable.unshift(newItem);
+        if(checkToken(newItem.token,req.headers.cookie)){
+            newItem.createTime = mockjs.mock('@now');
+            newItem.avatar = newItem.avatar || mockjs.Random.image('100x100', mockjs.Random.color(), '#757575', 'png');
+            newItem.key = mockjs.mock('@id');
 
-        res.status(200).json({message:"新增成功！"});
+            userTable.unshift(newItem);
+
+            res.status(200).json({message:"新增成功！",success:true});
+
+        }else{
+            res.status(501).json({message:"非法提交！",success:false});
+        }
+
+        
+        
     },
 
     [`PUT ${api.user}/:id`] (req,res) {
@@ -175,52 +232,61 @@ module.exports = {
         
         let {id,...updateItem} = req.body;
         let isExist = false;
-        
-        userTable.forEach((item,index) => {
-            if(id == item.key){
-                isExist = true;
-                userTable[index] = {...item,...updateItem}
-                console.log({...item,...updateItem})
-                return;
+
+        if(checkToken(updateItem.token,req.headers.cookie)){
+            userTable.forEach((item,index) => {
+                if(id == item.key){
+                    isExist = true;
+                    userTable[index] = {...item,...updateItem}
+                    console.log({...item,...updateItem})
+                    return;
+                }
+            });
+
+
+            if(isExist) {
+                res.status(201).json({message:'修改成功！'});
+            }else{
+                res.status(404).json({message: '找不到用户！'});
             }
-        });
-
-
-        if(isExist) {
-            res.status(201).json({message:'修改成功！'});
         }else{
-            res.status(404).json({message: '找不到用户！'});
+            res.status(501).json({message:"非法提交！",success:false});
         }
     },
     [`DELETE ${api.user}`] (req,res) {
         const params = qs.parse(req.query[0]);
-        let {deleteId} = params;
+        let {deleteId,token} = params;
         // console.log(deleteId)
         // console.log(isArray(deleteId))
-        if(isArray(deleteId)){
+        if(checkToken(token,req.headers.cookie)){
+            if(isArray(deleteId)){
 
-            let isExist = deleteId.every((item)=>!!queryTable(userTable,item,'key'))
+                let isExist = deleteId.every((item)=>!!queryTable(userTable,item,'key'))
 
 
-            if(isExist){
-                userTable = userTable.filter(item => !deleteId.some(_ => _ === item.key));
-                res.status(200).json({message:"成功删除"+deleteId.length+"条数据！"});
+                if(isExist){
+                    userTable = userTable.filter(item => !deleteId.some(_ => _ === item.key));
+                    res.status(200).json({message:"成功删除"+deleteId.length+"条数据！"});
+
+                }else{
+                    res.status(404).json({message:"删除失败，选中的数据在数据库不存在！"});
+                }
 
             }else{
-                res.status(404).json({message:"删除失败，选中的数据在数据库不存在！"});
-            }
+                let isExist = !!(queryTable(userTable,deleteId,'key'));
+            
+                if(isExist){
+                    userTable = userTable.filter(item => (item.key != deleteId));
 
+                    res.status(200).json({message:"成功删除1条数据！"});
+                }else{
+                    res.status(404).json({message:"删除失败，该条数据不存在！"});
+                }
+            }
         }else{
-            let isExist = !!(queryTable(userTable,deleteId,'key'));
-        
-            if(isExist){
-                userTable = userTable.filter(item => (item.key != deleteId));
-
-                res.status(200).json({message:"成功删除1条数据！"});
-            }else{
-                res.status(404).json({message:"删除失败，该条数据不存在！"});
-            }
+            res.status(501).json({message:"非法提交！",success:false});
         }
+        
     },
 
     [`GET ${api.checkAuthRoute}`](req,res){

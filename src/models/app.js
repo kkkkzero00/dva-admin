@@ -24,11 +24,13 @@ export default {
             // console.log(history)
             dispatch({type:'checkLogin'});
             
-            // console.log(Cookies.get('userInfo'))
+            
+            // console.log(JSON.parse(Cookies.get('userInfo')))
+            
             if(Cookies.get('userInfo')){
                 let {menus,userInfo} = JSON.parse(Cookies.get('userInfo'));
                 
-                // console.log(JSON.parse(Cookies.get('userInfo')))
+                
                 dispatch({
                     type:'updateState',
                     payload:{
@@ -36,7 +38,11 @@ export default {
                         menus,
                     }
                 })
+            }else{
+                dispatch(routerRedux.push('/login'));
             }
+
+
             if(Cookies.get('currentPath')){
                 let currentPath = JSON.parse(Cookies.get('currentPath'));
                 dispatch({
@@ -64,6 +70,8 @@ export default {
                     if(pathname == '/'){
                         pathname = '/indexPage';
                     }
+
+                    // console.log(pathname);
                     dispatch({type:"setCurrPath",payload:{paths:pathname}});
                 }
                 
@@ -103,8 +111,10 @@ export default {
                 }else{
                     menus = data.menus;
                 }       
-  
+    
 
+                // console.log(menus);
+                
                 Cookies.set('userInfo',{menus,userInfo},{expires: 1 })
                 // console.log(JSON.parse(Cookies.get('userInfo')));
                 
@@ -171,13 +181,25 @@ export default {
         },
 
         *setCurrPath({payload},{put,select}){
+
             let {app} = yield select();
             let {menus} = app;
             let paths = payload.paths;
             
+            //对详情页进行处理
+            if(paths.slice(-6) == 'detail'){
+                let pattern = /(\d)+/g;
+
+                paths = paths.replace(pattern,function(m){
+                    return ':id';
+                })               
+            }
+
             let currP = menus.filter(item => item.route === paths)[0];
 
-            // console.log(currP)
+            // console.log(menus);
+            // console.log(paths)
+
             let keyPath = currP.path.split("-");
 
             yield put({

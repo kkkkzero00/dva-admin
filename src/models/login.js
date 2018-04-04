@@ -1,4 +1,4 @@
-import {query} from 'services/login'
+import {query,getPrimaryKey} from 'services/login'
 import {queryURL} from 'utils/commonFunc'
 import Cookies from 'js-cookie';
 import qs from 'qs';
@@ -8,9 +8,19 @@ export default {
     state:{
        loginLoading:false,
        loginMessage:'',
-       hasTriggerLogin:0
+       hasTriggerLogin:0,
+       pKeys:''
+    },
+    subscriptions:{
+        setup({ dispatch, history }) {  // eslint-disable-line
+            dispatch({type:"getPrimaryKey"});
+        },
     },
     effects:{
+        *getPrimaryKey({payload},{put,call}){
+            let pKeys = yield call(getPrimaryKey);
+            console.log(pKeys);
+        },
         *login({payload},{put,call}){
             // console.log(payload) 
             // console.log(query)

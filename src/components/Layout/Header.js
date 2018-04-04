@@ -5,7 +5,7 @@ import headerStyle from './Header.less'
 
 const SubMenu = Menu.SubMenu;
 
-const Header = ({userInfo,menu,isNavbar,switchSider,logout}) => {
+const Header = ({userInfo,isNavbar,switchSider,logout}) => {
     // console.log(userInfo)
     const handleClick = ({ item, key, keyPath }) => {
          key === 'logout' && logout();

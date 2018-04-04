@@ -74,9 +74,6 @@ class SearchForm extends PureComponent{
         })
     }
 
-    componentWillReceiveProps(nextProps){
-
-    }
 
     /**
      * [表单控件的渲染]
@@ -84,9 +81,10 @@ class SearchForm extends PureComponent{
      * @return {[type]}      [description]
      */
     formItemRender = (item) => {
-        const { form:{getFieldDecorator},createInputComponent,createInitValue} = this.props;
+        let { form:{getFieldDecorator},createInputComponent,createInitValue} = this.props;
 
         let rules = (!!(item.search) && !isPlainObj(item.search))?(!!(item.search.rules)?item.search.rules:''):''
+        // console.log(item,rules);
 
         let inputOptions = { 
             initialValue:createInitValue(item,'search'),
@@ -102,13 +100,14 @@ class SearchForm extends PureComponent{
      * @return {[type]}      [description]
      */
     simpleSearchList = (list) => {
+        // console.log(this.props)
         let {isSmallScrean} = this.props;
 
         list = list.filter(item => (!!(item.search) && item.search.open) );
         list = list.slice(0,2);
 
         let layout = isSmallScrean?"vertical":"inline"
-        // console.log(isSmallScrean);
+        
 
 
         if(isSmallScrean){
@@ -136,6 +135,7 @@ class SearchForm extends PureComponent{
                         </div>
                     </Form>)
         }else{
+          // console.log(isSmallScrean);
             return (
                 <Form layout={layout} onSubmit={this.handleSearch}>
                     <HRow>
@@ -246,7 +246,7 @@ class SearchForm extends PureComponent{
 
     render(){
         let { slist,isSmallScrean} = this.props;
-        // console.log(isSmallScrean)
+
         return (
             <div className={classnames({"searchForm":true,"smallScreanSearch":isSmallScrean})}>  
                 {this.renderSearchList(slist)}      

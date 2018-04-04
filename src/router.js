@@ -7,8 +7,12 @@ import { Router,Route } from 'dva/router';
 
 import App from './routes/app';
 import PropTypes from 'prop-types';
+import axios from 'axios';
+
 
 const registerModel = (app,model) => {
+    // console.log(app._models);
+
     if(!(app._models.filter(m => m.namespace === model.namespace).length === 1)){
         app.model(model);
     }
@@ -16,7 +20,7 @@ const registerModel = (app,model) => {
 
 function RouterConfig({ history,app }) {
 
-    const routes = [{
+    var routes = [{
             path: '/',
             component:App,
             getIndexRoute(nextState,cb){
@@ -53,14 +57,22 @@ function RouterConfig({ history,app }) {
                     }
                 },
                 {
-                    path:'users',
+                    path:'/users',
                     getComponent(nextState,cb){
                         require.ensure([],require => {
-                            registerModel(app,require('./models/users'));
+                            registerModel(app,require('./models/users/'));
                             cb(null,require('./routes/users/'));
                         },'users')
                     }
-
+                },
+                {
+                    path:'/manager',
+                    getComponent(nextState,cb){
+                        require.ensure([],require => {
+                            registerModel(app,require('./models/manager/'));
+                            cb(null,require('./routes/manager/'));
+                        },'users')
+                    }
                 },
                 {
                     path:'charts/lineChart',
@@ -70,28 +82,47 @@ function RouterConfig({ history,app }) {
                             cb(null,require('./routes/charts/lineChart'));
                         },'charts-lineChart')
                     }
-
-                },
-                {
-                  path: 'error',
-                  getComponent (nextState, cb) {
-                    require.ensure([], require => {
-                      cb(null, require('./routes/error/'))
-                    }, 'error')
-                  },
-                },
-                {
-                  path: '*',
-                  getComponent (nextState, cb) {
-                    require.ensure([], require => {
-                      cb(null, require('./routes/error/'))
-                    }, 'error')
-                  },
-                },
+                }
                 
-
+                
             ]
     }]
+
+    const detailArr = ['users','manager'];
+
+    detailArr.forEach(item => {
+        let detail = {
+            path:`${item}/:id/detail`,
+            getComponent(nextState,cb){
+                require.ensure([],require => {
+                    registerModel(app,require('./models/'+item+'/detail'));
+                    cb(null,require('./routes/detail/'));
+                })
+            }
+        }
+
+        routes[0].childRoutes.push(detail);
+    })
+
+    let all = {
+          path: '*',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              cb(null, require('./routes/error/'))
+            }, 'error')
+          },
+    }
+    let error = {
+          path: 'error',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              cb(null, require('./routes/error/'))
+            }, 'error')
+          },
+    }
+
+    routes[0].childRoutes.push(error,all);
+    // console.log(routes[0].childRoutes);
 
     return <Router history={history} routes={routes} />
 }

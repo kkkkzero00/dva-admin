@@ -17,9 +17,9 @@ class CreateModal extends Component {
   }
 
   handleOk = () => {
-    let {modalType,onOk} = this.props;
-
-    
+    let {modalType,onOk,token} = this.props;
+    // console.log(token);
+      
 
     if(modalType == 'delete'){
         let {selectedRows} = this.props;
@@ -32,22 +32,31 @@ class CreateModal extends Component {
           deleteId = selectedRows[0].key;    
         }
 
-        onOk({deleteId},modalType);
+        onOk({deleteId,token},modalType);
 
         this.setState({
           confirmLoading:true
         })
 
+        let self = this;
 
-        setTimeout(()=>{
-            let {submitStatus} = this.props;
-            this.setState({
-              confirmLoading:false
-            })
+        function callself(){
+            let {submitStatus} = self.props;
+            
+            // console.log(submitStatus);
+
             if(submitStatus.ok){
-                this.props.hideModalVisible();
+
+                self.setState({
+                  confirmLoading:false
+                });
+                self.props.hideModalVisible();
+            }else{
+              setTimeout(callself,1000);
             }
-        },1000);
+        }
+        
+        setTimeout(callself,1000);
     }else{
 
         let {
@@ -56,11 +65,12 @@ class CreateModal extends Component {
 
 
         validateFieldsAndScroll((errors,vals) => {
-
+          // console.log(vals);
+          // console.log(errors)
           if (errors) {
             return
           }
-          onOk(vals,modalType);
+          onOk({...vals,token},modalType);
           this.setState({
             confirmLoading:true
           })
@@ -70,6 +80,8 @@ class CreateModal extends Component {
               this.setState({
                 confirmLoading:false
               })
+
+
               if(submitStatus.ok){
                   this.props.hideModalVisible();
               }
@@ -115,6 +127,10 @@ class CreateModal extends Component {
         <Form layout="horizontal">
           {newList.map(item => {
             let rules = (!!(item.form) && !isPlainObj(item.form))?((!!(item.form.rules)&&!isPlainObj(item.form.rules))?item.form.rules:''):''
+            
+            // if(rules && rules.pattern){
+            //   rules.pattern = new RegExp(rules.pattern);
+            // }
             let inputOptions = { 
               initialValue:createInitValue(item,type),
               rules:[rules]

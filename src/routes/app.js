@@ -15,7 +15,7 @@ const App = ({children,dispatch,app,loading,location}) => {
     const token = Cookies.get('u_Tok');
    
     let {siderFold,menus,userInfo,currentPath,isNavbar,openKeys,isSmallScrean} = app
-
+    // console.log(app);
     // console.log(siderFold)
     // 还没登录就跳转到登录框
     // console.log(!token || location.pathname == '/login')
@@ -46,7 +46,6 @@ const App = ({children,dispatch,app,loading,location}) => {
 
     const headerProps = {
         userInfo,
-        menus,
         isNavbar,
         switchSider(){
             dispatch({type:'app/switchSider'})

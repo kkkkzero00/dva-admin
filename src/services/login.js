@@ -19,3 +19,15 @@ export async function query(data) {
   // console.log(12)
   return request(params);
 }
+
+
+export async function getPrimaryKey() { 
+  // console.log(data)
+  let params = {
+    url:api.getkeys,
+    method:'get',
+  }
+  // console.log(12)
+  return request(params);
+
+}

@@ -65,7 +65,7 @@ const fetch = (options) => {
         return axios.post(url,qs.stringify(cloneData));
         break;
       case 'put':
-        // console.log(cloneData);
+        // console.log(qs.stringify(cloneData));
         return axios.put(url,qs.stringify(cloneData));
         break;
       case 'delete':

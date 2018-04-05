@@ -16,6 +16,16 @@ class Manager extends CommonListRoute{
         id:(text,record)=>{
           // console.log(record)
           return <Link to={"/manager/"+record.key+"/detail"}>{record.key}</Link>
+        },
+        role_id:(text,record)=>{
+          
+          let managerNames = [];
+          Object.keys(text).forEach(item=>{
+              managerNames.push(text[item].name)
+          });
+          managerNames = managerNames.join(",");
+
+          return <span>{managerNames}</span>
         }
     }
   }

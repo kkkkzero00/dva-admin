@@ -131,6 +131,8 @@ class CreateModal extends Component {
       },
     }
 
+    // console.log(newList);
+
     return (
         <Form layout="horizontal">
           {newList.map(item => {

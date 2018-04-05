@@ -88,12 +88,18 @@ class CommonListRoute extends Component {
       this.name = name;
     } 
 
-    getUsersData(currPage=1,pageSize=10){
-        this.props.dispatch({type:`${this.name}/query`,payload:{currPage,pageSize}})
-    }
-    
     componentWillMount(){
         this.getUsersData();
+    }
+
+    componentWillReceiveProps(nextProps){
+        // this.setState({currentRow:{}})
+        console.log(nextProps)
+    }
+
+
+    getUsersData(currPage=1,pageSize=10){
+        this.props.dispatch({type:`${this.name}/query`,payload:{currPage,pageSize}})
     }
 
 
@@ -104,11 +110,13 @@ class CommonListRoute extends Component {
      * @return {[type]}                 [description]
      */
     createInputComponent = (item) => {
-        let {type='text',options,label} = item;
+        let {type='text',label} = item;
         let { isSmallScrean } = this.props[this.name];
         let inputSize = isSmallScrean?'small':'default';
 
-        switch(type.toLowerCase()){
+        type = type.toLowerCase();
+
+        switch(type){
             case 'rangepicker':
                 return <RangePicker
                         size={inputSize}
@@ -116,12 +124,13 @@ class CommonListRoute extends Component {
                         showTime={true}
                         format="YYYY-MM-DD"
                         placeholder={['开始时间', '结束时间']}/>
-
+            case 'multiselect':
             case 'select':
+                let {options} = item;
                 return (
-                    <Select size={inputSize}>
-                      {options.map((opt)=>{
-                        return <Option value={opt.id} key={opt.id}>{opt.name}</Option>
+                    <Select size={inputSize} {...((type=='multiselect')?{mode:"multiple"}:null)}>
+                      {Object.keys(options).map((id)=>{
+                        return <Option value={parseInt(id)} key={parseInt(id)}>{options[id]}</Option>
                       })}
                     </Select>
                 )
@@ -140,12 +149,12 @@ class CommonListRoute extends Component {
      * @return {[type]}                 [description]
      */
     createInitValue = (item,formType="add") => {
-        let {type='text',name,options} = item;
+        let {type='text',name} = item;
         let {formVal,currentRow} = this.state;
 
+        type = type.toLowerCase();
 
-
-        switch(type.toLowerCase()){
+        switch(type){
             case 'rangepicker':
                 if(formType == 'search'){
                     let initialCreateTime = [];
@@ -173,13 +182,23 @@ class CommonListRoute extends Component {
                 }else if(formType == 'edit'){
                   return currentRow[name];
                 }
+            
             case 'select':
+            case 'multiselect':
+              let {options} = item;
+
               if(formType == 'search'){
                   return ({}.hasOwnProperty.call(formVal,name))?formVal[name]:null;
               }else if(formType == 'add'){
-                // console.log(options[0].id)
-                  return options[0].id;
+                  return options[Object.keys(options)[0]];
               }else if(formType == 'edit'){
+                  if(type=='multiselect'){
+                    let keys = Object.keys(currentRow[name]).map(item => parseInt(item));
+                    // console.log(keys);
+                    return keys
+                  }
+                  console.log(currentRow);
+
                   return currentRow[name];
               }
             case 'number':
@@ -377,11 +396,21 @@ class CommonListRoute extends Component {
               // console.log(currentRow);
               data = {id:currentRow.key,_pk:currentRow.id,...data}
 
+              /*Object.keys(currentRow).forEach(item => {
+                if(data[item]!=undefined){
+                  currentRow[item] = data[item];
+                }
+              })
+
+              this.setState({
+                  currentRow
+              });*/
+
             } 
-            // console.log(`${namespace}/${action}`);
+
 
             data['token'] = token;
-            // console.log(data);
+
             dispatch({type:`${namespace}/${action}`,payload:data});
           },
         }

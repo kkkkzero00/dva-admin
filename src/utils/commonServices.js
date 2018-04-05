@@ -91,7 +91,7 @@ export default class CommonServices {
             method:'put',
             data
         }
-       
+        // console.log(data);
         return request(params);
     }
 

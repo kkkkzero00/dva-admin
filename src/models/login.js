@@ -9,17 +9,19 @@ export default {
        loginLoading:false,
        loginMessage:'',
        hasTriggerLogin:0,
-       pKeys:''
+       token:''
     },
     subscriptions:{
         setup({ dispatch, history }) {  // eslint-disable-line
-            dispatch({type:"getPrimaryKey"});
+            dispatch({type:"getPublicKey"});
         },
     },
     effects:{
-        *getPrimaryKey({payload},{put,call}){
-            let pKeys = yield call(getPrimaryKey);
-            console.log(pKeys);
+        *getPublicKey({payload},{put,call}){
+            let {token,success} = yield call(getPrimaryKey);
+            if(success){
+               yield put({type:'updateState',payload:{token}});
+            }
         },
         *login({payload},{put,call}){
             // console.log(payload) 

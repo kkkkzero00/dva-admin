@@ -19,7 +19,7 @@ class CreateModal extends Component {
   handleOk = () => {
     let {modalType,onOk,token} = this.props;
     // console.log(token);
-      
+    let self = this;
 
     if(modalType == 'delete'){
         let {selectedRows} = this.props;
@@ -38,7 +38,7 @@ class CreateModal extends Component {
           confirmLoading:true
         })
 
-        let self = this;
+        
 
         function callself(){
             let {submitStatus} = self.props;
@@ -75,17 +75,25 @@ class CreateModal extends Component {
             confirmLoading:true
           })
 
-          setTimeout(()=>{
-              let {submitStatus} = this.props;
-              this.setState({
-                confirmLoading:false
-              })
-
+          function callself(){
+              let {submitStatus} = self.props;
+              
+              // console.log(submitStatus);
 
               if(submitStatus.ok){
-                  this.props.hideModalVisible();
+
+                  self.setState({
+                    confirmLoading:false
+                  });
+                  self.props.hideModalVisible();
+              }else{
+                setTimeout(callself,1000);
               }
-          },1000);
+          }
+
+
+
+          setTimeout(callself,1000);
         })
     }
     

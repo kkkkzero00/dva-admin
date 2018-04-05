@@ -3,6 +3,10 @@ import { connect } from 'dva';
 import { Button, Row, Form, Input, Alert  } from 'antd';
 import config from 'utils/config'
 import './index.less';
+import {aes_encrpyt,sha1_encrypt} from 'utils/commonFunc';
+
+
+
 const FormItem = Form.Item;
 
 
@@ -12,16 +16,27 @@ const Login = ({login,dispatch,form:{getFieldDecorator,validateFieldsAndScroll}}
     // console.log(arguments)
 
     function handleOk(){
+        
+
        validateFieldsAndScroll( async (errors,values) => {
             // console.log(errors)
             if(errors) return;
-            // console.log(1231)
-            dispatch({type:'login/login',payload:values})
+
+            let {account,password,token} = values;
+            // console.log(token)
+            var key = token.slice(0,10);
+            var iv = token.slice(10);
+
+            account = aes_encrpyt(account,key,iv);
+
+            password = sha1_encrypt(password,key);
+
+            dispatch({type:'login/login',payload:{account,password}})
     
         })
     }
 
-    // console.log(login)
+
     return (
         <div className="container">
             <div className="login-form" style={isSmallScrean?{width:240}:{}}>
@@ -45,12 +60,14 @@ const Login = ({login,dispatch,form:{getFieldDecorator,validateFieldsAndScroll}}
 
                     <FormItem hasFeedback>
                         {getFieldDecorator('password',{
-                            rules:[
-                                {
-                                    required:true,
-                                }
-                            ]
-                        })(<Input size="large" onPressEnter={handleOk} placeholder="管理员密码" />)}
+                            rules:[ {required:true,}]
+                        })(<Input size="large" type="password" onPressEnter={handleOk} placeholder="管理员密码" />)}
+                    </FormItem>
+
+                    <FormItem>
+                        {getFieldDecorator('token',
+                            {initialValue:login.token}
+                        )(<Input type="hidden"/>)}
                     </FormItem>
 
                     

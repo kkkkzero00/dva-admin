@@ -1,4 +1,6 @@
 import lodash from 'lodash';
+import CryptoJS from 'crypto-js';
+
 
 // 在路由中通过键名找到某个参数的值
 const queryURL = (name) => {
@@ -48,9 +50,46 @@ const arrayToTree = (array,id='id',pid='pid',children='children') => {
     return result;
 }
 
+function aes_encrpyt(content,key,iv) {
+    var result;
+
+    key = format_key(key);
+
+    key = CryptoJS.enc.Utf8.parse(key);
+
+    iv = CryptoJS.enc.Base64.parse(iv);
+
+    var encrypt = CryptoJS.AES.encrypt(
+        content, 
+        key, 
+        {
+            iv: iv, 
+            mode:CryptoJS.mode.CBC,
+            padding: CryptoJS.pad.ZeroPadding
+        }
+    );
+
+    result = encrypt.toString();
+
+    return result;
+}
+ 
+function format_key(key) {
+    while (key.length < 16) {
+        key = key + '\u0000';
+    }
+    return key;
+}
+
+function sha1_encrypt(value,key){
+   return CryptoJS.SHA1(value+key).toString();
+}
+
 
 module.exports = {
     queryURL,
     arrayToTree,
-    isPlainObj
+    isPlainObj,
+    aes_encrpyt,
+    sha1_encrypt
 }

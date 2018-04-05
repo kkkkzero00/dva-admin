@@ -22,7 +22,7 @@
     "babel-plugin-transform-runtime": "^6.9.0",
     "babel-polyfill": "^6.26.0",
     "classnames": "^2.2.5",
-    "crypto": "^1.0.1",
+    "crypto-js": "^3.1.9-1",
     "css-loader": "^0.28.9",
     "dora": "^0.5.0",
     "dora-plugin-proxy": "^0.8.5",

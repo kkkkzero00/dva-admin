@@ -39,7 +39,7 @@ function commonListModel(model){
     var defaultModel = {
         state: {
             list:[],
-            userConfig:[],
+            columnConfig:[],
             token:null,
             current:1,//当前分页信息
             pageSize:10,
@@ -76,7 +76,7 @@ function commonListModel(model){
                 let {currPage} = payload;
 
                 if(config != undefined){
-                    yield put({type:'updateStatus',payload:{userConfig:config}});
+                    yield put({type:'updateStatus',payload:{columnConfig:config}});
                 }
 
                 if(token != undefined){
@@ -97,9 +97,9 @@ function commonListModel(model){
                 if(res.success){
                     let selfState = (yield select())[namespace];
                     let {pageSize} = selfState;
+                    yield put({type:"query",payload:{currPage:1,pageSize:pageSize}});
 
                     submitStatus = {type:1,ok:true,message:'提交成功！'};
-                    yield put({type:"query",payload:{currPage:1,pageSize:pageSize}});
 
                 }else{
                     // console.log(res);

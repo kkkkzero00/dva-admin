@@ -31,13 +31,39 @@ const ToolBtn = ({selectedRows,onBtnHandler,customBtn}) => {
         marginRight:10
     }
 
+
     function renderCustomBtn(btn){
        if(btn.length){
           return btn.map(item => {
             let render = item.btnRender;
             delete item.btnRender;
 
-            return <span key={item.key}>{render(selectedRows,item)}</span>;
+            if(item.type == undefined) item.type = 'action';
+
+            let custom = {};
+
+            switch(item.type.toLowerCase()){
+              case 'action':
+                custom = {
+                  ...((item.onClick)?{onClick:item.onClick.bind(this)}:{})
+                }
+                break;
+              case 'modal':
+                custom = {
+                  ...(((selectedRows.length>1)||(selectedRows.length==0))?({disabled:'disabled'}):{}),
+                  ...({onClick:onBtnHandler.bind(this,item.key,item)})
+                }
+                break;
+            }
+
+            return (
+              <Button 
+                {...custom}        
+                key={item.key}
+              >
+              {item.name}
+              </Button>
+            );
           })
        }
     }
@@ -45,12 +71,12 @@ const ToolBtn = ({selectedRows,onBtnHandler,customBtn}) => {
     return (
       <div className="toolBtn">
 
-          <Button type="primary" className="add-btn" onClick={onBtnHandler.bind(this,'add')}>新增</Button>
+          <Button type="primary" className="add-btn" onClick={onBtnHandler.bind(this,'add',null)}>新增</Button>
           {(selectedRowsLen>0)?
               <Button type="ghost" 
                       className="edit-btn"
                       key="edit-btn"
-                      {...((selectedRowsLen>1)?{disabled:true}:{onClick:onBtnHandler.bind(this,'edit')})}>编辑</Button>:''}
+                      {...((selectedRowsLen>1)?{disabled:true}:{onClick:onBtnHandler.bind(this,'edit',null)})}>编辑</Button>:''}
           {
             (selectedRowsLen>0)?
               (selectedRowsLen>1)?
@@ -58,12 +84,12 @@ const ToolBtn = ({selectedRows,onBtnHandler,customBtn}) => {
                   type="ghost"
                   className="muti-del-btn"
                   key="muti-del-btn"
-                  onClick={onBtnHandler.bind(this,'delete')}>批量删除</Button>):
+                  onClick={onBtnHandler.bind(this,'delete',null)}>批量删除</Button>):
               (<Button 
                   type="ghost"
                   className="del-btn"
                   key="del-btn"
-                  onClick={onBtnHandler.bind(this,'delete')}>删除</Button>):''
+                  onClick={onBtnHandler.bind(this,'delete',null)}>删除</Button>):''
           }
           
           {customBtn?renderCustomBtn(customBtn):''}
@@ -77,10 +103,11 @@ class CommonListRoute extends Component {
     state = {
       // expandForm: false,
       selectedRows: [],
-      currentRow:{},
+      currentRow:null,
       modalVisible:false,//弹出窗显示状态
       modalType:'add',//弹出窗的类型（添加用户，编辑用户）
       formVal: {},
+      renderModalConfig:null
     };
 
     constructor(props,{name}){
@@ -94,7 +121,7 @@ class CommonListRoute extends Component {
 
     componentWillReceiveProps(nextProps){
         // this.setState({currentRow:{}})
-        console.log(nextProps)
+        // console.log(nextProps)
     }
 
 
@@ -190,16 +217,17 @@ class CommonListRoute extends Component {
               if(formType == 'search'){
                   return ({}.hasOwnProperty.call(formVal,name))?formVal[name]:null;
               }else if(formType == 'add'){
-                  return options[Object.keys(options)[0]];
+
+                  return null
               }else if(formType == 'edit'){
                   if(type=='multiselect'){
                     let keys = Object.keys(currentRow[name]).map(item => parseInt(item));
                     // console.log(keys);
                     return keys
                   }
-                  console.log(currentRow);
+                  // console.log(currentRow);
 
-                  return currentRow[name];
+                  return parseInt(currentRow[name]);
               }
             case 'number':
               if(formType == 'search'){
@@ -214,7 +242,7 @@ class CommonListRoute extends Component {
               if(formType == 'search'){
                 return ({}.hasOwnProperty.call(formVal,name))?formVal[name]:null;
               }else if(formType == 'add'){
-                return null
+                return null;
               }else if(formType == 'edit'){
                 return currentRow[name];
               }
@@ -224,13 +252,13 @@ class CommonListRoute extends Component {
     render(){
         let namespace = this.name;
 
-        let {formVal,selectedRows,modalVisible,modalType} = this.state;
+        let {formVal,selectedRows,currentRow,modalVisible,modalType,renderModalConfig} = this.state;
 
         let {
           dispatch,
           [namespace]:{
             list,
-            userConfig,
+            columnConfig,
             token,
             loading,
             current,
@@ -245,8 +273,8 @@ class CommonListRoute extends Component {
 
         let columns = [];
 
-        if(userConfig.length!=0){
-            let showList = userConfig.filter(item =>{
+        if(columnConfig.length!=0){
+            let showList = columnConfig.filter(item =>{
               return !!(item.render) && !!(item.render.show)
             })
 
@@ -274,7 +302,7 @@ class CommonListRoute extends Component {
         let self = this;
 
         const searchFormProps = {
-          slist:userConfig,
+          slist:columnConfig,
           isSmallScrean:isSmallScrean && (document.body.clientWidth<=456),
           createInputComponent:this.createInputComponent,
           createInitValue:this.createInitValue,
@@ -358,64 +386,74 @@ class CommonListRoute extends Component {
         const toolBtnProps = {
           selectedRows,
           customBtn:this.renderCustomBtn?(this.renderCustomBtn()):null,
-          onBtnHandler:(modalType,e)=>{
+          onBtnHandler:(modalType,renderModalConfig,e)=>{
           
-              let self = this;
+            let self = this;
+            if(renderModalConfig&&renderModalConfig.beforeClick){
+              renderModalConfig.beforeClick();
+            }
+           
+            self.setState({
+              modalVisible:true,
+              modalType:modalType,
+              renderModalConfig
+            });
+          }
+        }
+        // console.log(currentRow);
+        var modalProps = {};
 
-              self.setState({
-                modalVisible:true,
-                modalType:modalType,
-              })
-              
+        if(!renderModalConfig){
+            modalProps = {
+              modalVisible,
+              modalType,
+              submitStatus,
+              selectedRows,
+              currentRow,
+              token,
+              createInputComponent:this.createInputComponent,
+              createInitValue:this.createInitValue,
+              list:columnConfig,
+              hideModalVisible:() => {
+                this.setState({
+                  modalVisible:false
+                });
+
+                dispatch({type:`${namespace}/updateStatus`,payload:{submitStatus:{type:0,ok:false,message:''}}});
+              },
+              onOk:(data,type) => {
+                let action = type;
+                let currentRow = {};
+                // console.log(data);
+                if(type == 'add') action = 'create';
+                else if(type == 'edit'){
+                  action = 'update';
+                  currentRow = this.state.currentRow;
+                  // console.log(currentRow);
+                  data = {id:currentRow.key,_pk:currentRow.id,...data}
+                } 
+                // console.log(data);
+                dispatch({type:`${namespace}/${action}`,payload:data});
+              },
+            }
+        }else{
+          modalProps = {
+            currentRow,
+            modalVisible,
+            modalType,
+            renderModalConfig,
+            token,
+            submitStatus,
+            hideModalVisible:() => {
+                this.setState({
+                  modalVisible:false
+                });
+            },
           }
         }
 
-        const modalProps = {
-          modalVisible,
-          modalType,
-          submitStatus,
-          selectedRows,
-          createInputComponent:this.createInputComponent,
-          createInitValue:this.createInitValue,
-          list:userConfig,
-          hideModalVisible:() => {
-            this.setState({
-              modalVisible:false
-            });
 
-            dispatch({type:`${namespace}/updateStatus`,payload:{submitStatus:{type:0,ok:false,message:''}}});
-          },
-          onOk:(data,type) => {
-            let action = type;
-            let currentRow = {};
-            // console.log(data);
-            if(type == 'add') action = 'create';
-            else if(type == 'edit'){
-              action = 'update';
-              currentRow = this.state.currentRow;
-              // console.log(currentRow);
-              data = {id:currentRow.key,_pk:currentRow.id,...data}
-
-              /*Object.keys(currentRow).forEach(item => {
-                if(data[item]!=undefined){
-                  currentRow[item] = data[item];
-                }
-              })
-
-              this.setState({
-                  currentRow
-              });*/
-
-            } 
-
-
-            data['token'] = token;
-
-            dispatch({type:`${namespace}/${action}`,payload:data});
-          },
-        }
-
-        // console.log(isSmallScrean)
+        // console.log(renderModalConfig)
         return (
             <div className="contentInner">
                 <div className="list-card-body">
@@ -423,7 +461,7 @@ class CommonListRoute extends Component {
                         <SearchForm {...searchFormProps}/>
                         <ToolBtn {...toolBtnProps}/>
                         {(columns.length!=0)?<TableList {...tableListProps}/>:<Spin style={{width:"100%",margin:"0 auto",textAlign:'center'}}/>}
-                        {modalVisible?<CreateModal {...modalProps}/>:''}
+                        {modalVisible?(renderModalConfig?renderModalConfig.render(modalProps):<CreateModal {...modalProps}/>):''}
                     </div>
                 </div>
             </div>

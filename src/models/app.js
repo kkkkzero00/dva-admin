@@ -26,18 +26,12 @@ export default {
             
             
             // console.log(JSON.parse(Cookies.get('userInfo')))
-            
+            // console.log(Cookies.get('userInfo'))
             if(Cookies.get('userInfo')){
                 let {menus,userInfo} = JSON.parse(Cookies.get('userInfo'));
                 
                 
-                dispatch({
-                    type:'updateState',
-                    payload:{
-                        userInfo,
-                        menus,
-                    }
-                })
+                dispatch({type:'updateState',payload:{userInfo, menus,}})
             }else{
                 dispatch(routerRedux.push('/login'));
             }
@@ -45,12 +39,7 @@ export default {
 
             if(Cookies.get('currentPath')){
                 let currentPath = JSON.parse(Cookies.get('currentPath'));
-                dispatch({
-                    type:'updateState',
-                    payload:{
-                        currentPath
-                    }
-                })
+                dispatch({type:'updateState',payload:{currentPath}})
             }
             
 
@@ -95,7 +84,7 @@ export default {
             // let token = Cookies.get('u_Tok');
             let res = yield call(query,payload);
             let {success,data} = res;         
-            
+            // console.log(res)
             if(success){
                 let menus;
                 let permissions;
@@ -119,21 +108,9 @@ export default {
                 // console.log(JSON.parse(Cookies.get('userInfo')));
                 
                 /*注册到全局也就是app的state里面*/
-                yield put({
-                    type:"updateState",
-                    payload:{
-                        userInfo,
-                        menus,
-                    }
-                })
+                yield put({type:"updateState",payload:{userInfo,menus,}})
 
-                yield put({
-                    type:'login/updateState',
-                    payload:{
-                        loginMessage:'登录成功！',
-                        hasTriggerLogin:1
-                    }
-                })
+                yield put({type:'login/updateState',payload:{loginMessage:'登录成功！',hasTriggerLogin:1}})
 
 
                 if(location.pathname == '/login'){
@@ -141,14 +118,7 @@ export default {
                 }
 
             }else{
-               
-                yield put({
-                    type:'login/updateState',
-                    payload:{
-                        loginMessage:'网络错误请重新登录！',
-                        hasTriggerLogin:2
-                    }
-                })
+                yield put({type:'login/updateState',payload:{loginMessage:res.message?res.message:'网络错误请重新登录！', hasTriggerLogin:2}})
             }
         },
 

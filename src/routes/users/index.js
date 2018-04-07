@@ -42,19 +42,17 @@ class Users extends CommonListRoute{
       {
         key:'getTitle',
         style:{},
-        btnRender:()=><Button>获取标题</Button>,
+        onClick:(e)=>{
+          console.log();
+          this.props.dispatch({type:'users/getTitle'});
+        },
+        type:'action',
+        name:'获取标题'
       },
       {
         key:'getUser',
-        handleClick:(e)=>{
-            // console.log(e.target);
-            // 要指定这个组件所属的model的前缀
-            this.props.dispatch({type:'users/getTitle'})
-        },
-        // 可获得选中的字段
-        btnRender:(selectRows,params)=>{
-          return <Button className="getTitle2" onClick={params.handleClick}>获取用户</Button>
-        },
+        name:'获取用户',
+        type:'action'
       }
     ]
   }

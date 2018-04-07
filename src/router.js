@@ -75,6 +75,15 @@ function RouterConfig({ history,app }) {
                     }
                 },
                 {
+                    path:'/role',
+                    getComponent(nextState,cb){
+                        require.ensure([],require => {
+                            registerModel(app,require('./models/role/'));
+                            cb(null,require('./routes/role/'));
+                        },'users')
+                    }
+                },
+                {
                     path:'charts/lineChart',
                     getComponent(nextState,cb){
                         require.ensure([],require => {

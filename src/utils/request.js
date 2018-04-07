@@ -100,28 +100,10 @@ export default function request(options) {
 
               let success = false;
 
-              if (response.status >= 200 && response.status < 300) {
+              if (response.status >= 200 && response.status < 300 && data.code >=200 && data.status <300) {
                   success = true;
               }
-              // console.log(response)
 
-              // console.log(response)
-              // const error = new Error(response.statusText);
-              // error.response = response;
-              // throw error;
-              // console.log(success)
-
-              // console.log(response)
-              // console.log(data);
-              // console.log({
-              //   success:success,
-              //   message:statusText,
-              //   statusCode:status,
-              //   ...data
-              // })
-              // console.log(response)
-
-                    
               return {
                 success,
                 message:statusText,

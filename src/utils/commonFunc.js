@@ -73,6 +73,52 @@ function aes_encrpyt(content,key,iv) {
 
     return result;
 }
+
+/**
+ * [isEqualObj 对象深比较函数]
+ * @param  {[type]}  a [description]
+ * @param  {[type]}  b [description]
+ * @return {Boolean}   [description]
+ */
+function isEqualObj(a,b){
+    if ( a === b ) { 
+        return true; 
+    } 
+
+    if (!( a instanceof Object ) || !( b instanceof Object )) { 
+        return false; 
+    } 
+
+    if ( a.constructor !== b.constructor ) { 
+        return false; 
+    } 
+
+    if( a instanceof Array && b instanceof Array){
+
+        for(var i=0, aLen = a.length;i<aLen;i++){
+            if (!isEqualObj(a[i], b[i])) {
+                return false;
+            }
+        }
+    }else if(a instanceof Object && b instanceof Object){
+        let akeys = Object.keys(a);
+        for (var key of akeys) {
+            
+            if (a.hasOwnProperty(key)) {
+                if (!b[key]) {
+                    return false;
+                }
+
+                if (!isEqualObj(a[key], b[key])) {
+                    return false;
+                }
+
+            }
+        }
+    }
+    
+    return true;
+}
  
 function format_key(key) {
     while (key.length < 16) {
@@ -91,5 +137,6 @@ module.exports = {
     arrayToTree,
     isPlainObj,
     aes_encrpyt,
-    sha1_encrypt
+    sha1_encrypt,
+    isEqualObj
 }

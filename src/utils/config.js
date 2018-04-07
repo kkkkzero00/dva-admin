@@ -28,7 +28,8 @@ module.exports = {
         logout:`${TP5AdminApi}/logout`,
         checkAuthRoute:`${TP5AdminApi}/checkAuthRoute`,
         users:`${TP5AdminApi}/users`,
-        manager:`${TP5AdminApi}/manager`
+        manager:`${TP5AdminApi}/manager`,
+        role:`${TP5AdminApi}/role`
     },
     routes:['system','nav','menu','detail'],
     logo:'/logo.png',

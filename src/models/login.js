@@ -30,20 +30,28 @@ export default {
             yield put({type:'showLoading'});
             // console.log(11)
             
-            const info = yield call(query,payload);
+            const res = yield call(query,payload);
          
             yield put({type:'hideLoading'});
 
-            if(info&&info.success){
+            // console.log(res)
+
+            if(res&&res.success){
                 const from = queryURL('from');
                 /*登记信息*/
                 yield put({type:'app/query'})
+            }else{
+                yield put({type:'updateState',payload:{loginMessage:res.message?res.message:'网络错误请重新登录！', hasTriggerLogin:2}})
             }
         },
+        *test({payload},{put,call}){
+            console.log(payload)
+        }
     },
 
     reducers:{
         updateState(state,{payload}){
+            // console.log(payload)
             return {
                 ...state,
                 ...payload

@@ -1,6 +1,5 @@
 /*处理异步请求*/
 import request from 'utils/request';
-import qs from 'qs';
 
 import config from 'utils/config'
 
@@ -16,7 +15,7 @@ if(!isUseMock){
 
 export default class CommonServices {
     constructor(name){
-        // console.log(name)
+        // console.log(this)
         this.apiName = name;
         this.query = this.query.bind(this);
         this.read = this.read.bind(this);

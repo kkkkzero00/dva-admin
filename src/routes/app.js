@@ -15,7 +15,7 @@ const App = ({children,dispatch,app,loading,location}) => {
     const token = Cookies.get('u_Tok');
    
     let {siderFold,menus,userInfo,currentPath,isNavbar,openKeys,isSmallScrean} = app
-    // console.log(app);
+
     // console.log(siderFold)
     // 还没登录就跳转到登录框
     // console.log(!token || location.pathname == '/login')
@@ -101,4 +101,11 @@ App.propTypes = {
     loading: PropTypes.object,
 }
 
-export default connect(({app,loading}) => ({app,loading}))(App);
+const mapStateProps = (state)=>{
+    let {app,loading} = state;
+    // console.log(state)
+    return {app,loading};
+}
+
+
+export default connect(mapStateProps)(App);

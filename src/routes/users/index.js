@@ -37,25 +37,25 @@ class Users extends CommonListRoute{
    * [自定义功能按钮]
    * @return {[type]} [description]
    */
-  renderCustomBtn = () =>{
-    return [
-      {
-        key:'getTitle',
-        style:{},
-        onClick:(e)=>{
-          console.log();
-          this.props.dispatch({type:'users/getTitle'});
-        },
-        type:'action',
-        name:'获取标题'
-      },
-      {
-        key:'getUser',
-        name:'获取用户',
-        type:'action'
-      }
-    ]
-  }
+  // renderCustomBtn = () =>{
+  //   return [
+  //     {
+  //       key:'getTitle',
+  //       style:{},
+  //       onClick:(e)=>{
+  //         console.log();
+  //         this.props.dispatch({type:'users/getTitle'});
+  //       },
+  //       type:'action',
+  //       name:'获取标题'
+  //     },
+  //     {
+  //       key:'getUser',
+  //       name:'获取用户',
+  //       type:'action'
+  //     }
+  //   ]
+  // }
 }
 
 const mapStateProps = (state)=>{

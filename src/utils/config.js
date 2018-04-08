@@ -1,7 +1,6 @@
-const HJKAPI = '/api/v1'
-const TP5AdminApi = 'http://localhost/framework/gitTest/hy-admin2.0/TP5Admin/public/index.php'
+const HJKAPI = '/api/v1';
 
-
+const TP5AdminApi = 'http://localhost/framework/gitTest/hy-admin2.0/TP5Admin/public/index.php';
 
 module.exports = {
     name: 'HJK ROOM',

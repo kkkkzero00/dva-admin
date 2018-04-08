@@ -75,6 +75,24 @@ function RouterConfig({ history,app }) {
                     }
                 },
                 {
+                    path:'users/:id/detail',
+                    getComponent(nextState,cb){
+                        require.ensure([],require => {
+                            registerModel(app,require('./models/users/detail'));
+                            cb(null,require('./routes/users/detail/'));
+                        },'users_detail')
+                    }
+                },
+                {
+                    path:'manager/:id/detail',
+                    getComponent(nextState,cb){
+                        require.ensure([],require => {
+                            registerModel(app,require('./models/manager/detail'));
+                            cb(null,require('./routes/manager/detail/'));
+                        },'manager_detail')
+                    }
+                },
+                {
                     path:'/role',
                     getComponent(nextState,cb){
                         require.ensure([],require => {
@@ -97,21 +115,6 @@ function RouterConfig({ history,app }) {
             ]
     }]
 
-    const detailArr = ['users','manager'];
-
-    detailArr.forEach(item => {
-        let detail = {
-            path:`${item}/:id/detail`,
-            getComponent(nextState,cb){
-                require.ensure([],require => {
-                    registerModel(app,require('./models/'+item+'/detail'));
-                    cb(null,require('./routes/detail/'));
-                })
-            }
-        }
-
-        routes[0].childRoutes.push(detail);
-    })
 
     let all = {
           path: '*',

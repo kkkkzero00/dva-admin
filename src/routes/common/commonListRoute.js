@@ -10,7 +10,7 @@ import 'moment/locale/zh-cn';
 moment.locale('zh-cn');
 
 import axios from 'axios';
-import config from 'utils/config';
+import {isEqualObj} from 'utils/commonFunc';
 
 import Grid from 'components/Grid';
 const { HRow, HCol } = Grid;
@@ -120,8 +120,20 @@ class CommonListRoute extends Component {
     }
 
     componentWillReceiveProps(nextProps){
-        // this.setState({currentRow:{}})
-        // console.log(nextProps)
+        let {currentRow} = this.state;
+
+
+        if(!currentRow) return true;
+        // console.log(nextProps[this.name])
+
+        let newCurrRow = nextProps[this.name]['list'].filter(item => (item.key == currentRow.key))[0];
+
+
+        if(!isEqualObj(newCurrRow,currentRow)){
+            this.setState({
+                currentRow:newCurrRow
+            });
+        }
     }
 
 
@@ -137,7 +149,7 @@ class CommonListRoute extends Component {
      * @return {[type]}                 [description]
      */
     createInputComponent = (item) => {
-        let {type='text',label} = item;
+        let {type='text',label,options} = item;
         let { isSmallScrean } = this.props[this.name];
         let inputSize = isSmallScrean?'small':'default';
 
@@ -152,8 +164,14 @@ class CommonListRoute extends Component {
                         format="YYYY-MM-DD"
                         placeholder={['开始时间', '结束时间']}/>
             case 'multiselect':
+                // return (
+                //     <Select size={inputSize} {...((type=='multiselect')?{mode:"multiple"}:null)}>
+                //       {Object.keys(options).map((id)=>{
+                //         return <Option value={parseInt(id)} key={parseInt(id)}>{options[id]}</Option>
+                //       })}
+                //     </Select>
+                // )
             case 'select':
-                let {options} = item;
                 return (
                     <Select size={inputSize} {...((type=='multiselect')?{mode:"multiple"}:null)}>
                       {Object.keys(options).map((id)=>{
@@ -215,17 +233,21 @@ class CommonListRoute extends Component {
               let {options} = item;
 
               if(formType == 'search'){
+                  // console.log(formVal[name]);
+                  if(type=='multiselect'){
+                    return ({}.hasOwnProperty.call(formVal,name))?formVal[name]:undefined;
+                  }
+
                   return ({}.hasOwnProperty.call(formVal,name))?formVal[name]:null;
               }else if(formType == 'add'){
-
-                  return null
+                  // if(type == 'multiselect') return options[Object.keys(options)[0]];
+                  return undefined;
               }else if(formType == 'edit'){
                   if(type=='multiselect'){
                     let keys = Object.keys(currentRow[name]).map(item => parseInt(item));
                     // console.log(keys);
                     return keys
                   }
-                  // console.log(currentRow);
 
                   return parseInt(currentRow[name]);
               }

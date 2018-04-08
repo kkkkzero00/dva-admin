@@ -30,6 +30,7 @@ export default class CommonServices {
 
         let searchParams = [`currPage=${currPage}`,`pageSize=${pageSize}`];
 
+        // console.log(otherParams);
 
         if(otherParams){
             Object.keys(otherParams).forEach((item) => {

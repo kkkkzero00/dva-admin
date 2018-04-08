@@ -66,7 +66,7 @@ function commonListModel(model){
         effects:{
             *query({payload},{call,put,select}){
                 yield put({type:'showLoading'})
-
+                // console.log(payload);
                 let res =  yield call(query,payload);
 
                 yield put({type:'hideLoading'});

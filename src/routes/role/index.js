@@ -257,23 +257,6 @@ class Role extends CommonListRoute{
         2、action 点击后直接和model层进行信息交互    
 
     */
-   
-    componentWillReceiveProps (nextProps,nextState){
-        let {currentRow} = this.state;
-
-
-        if(!currentRow) return true;
-
-        let newestCurrRow = nextProps['role']['list'].filter(item => (item.key == currentRow.key))[0];
-
-        if(!isEqualObj(newestCurrRow,currentRow)){
-            this.setState({
-                currentRow:newestCurrRow
-            });
-        }
-
-    }
-
 
     renderCustomBtn = () =>{
         return [

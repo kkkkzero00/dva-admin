@@ -11,7 +11,6 @@ import axios from 'axios';
 
 
 const registerModel = (app,model) => {
-    // console.log(app._models);
 
     if(!(app._models.filter(m => m.namespace === model.namespace).length === 1)){
         app.model(model);
@@ -57,11 +56,30 @@ function RouterConfig({ history,app }) {
                     }
                 },
                 {
+                    path:'users/:id/detail',
+                    getComponent(nextState,cb){
+                        require.ensure([],require => {
+                            // console.log('detail');
+                            registerModel(app,require('./models/users/detail'));
+                            cb(null,require('./routes/users/detail'));
+                        },'usersdetail')
+                    }
+                },
+                {
+                    path:'manager/:id/detail',
+                    getComponent(nextState,cb){
+                        require.ensure([],require => {
+                            registerModel(app,require('./models/manager/detail'));
+                            cb(null,require('./routes/manager/detail'));
+                        },'managerdetail')
+                    }
+                },
+                {
                     path:'/users',
                     getComponent(nextState,cb){
                         require.ensure([],require => {
                             registerModel(app,require('./models/users/'));
-                            cb(null,require('./routes/users/'));
+                            cb(null,require('./routes/users/index'));
                         },'users')
                     }
                 },
@@ -70,26 +88,8 @@ function RouterConfig({ history,app }) {
                     getComponent(nextState,cb){
                         require.ensure([],require => {
                             registerModel(app,require('./models/manager/'));
-                            cb(null,require('./routes/manager/'));
+                            cb(null,require('./routes/manager/index'));
                         },'users')
-                    }
-                },
-                {
-                    path:'users/:id/detail',
-                    getComponent(nextState,cb){
-                        require.ensure([],require => {
-                            registerModel(app,require('./models/users/detail'));
-                            cb(null,require('./routes/users/detail/'));
-                        },'users_detail')
-                    }
-                },
-                {
-                    path:'manager/:id/detail',
-                    getComponent(nextState,cb){
-                        require.ensure([],require => {
-                            registerModel(app,require('./models/manager/detail'));
-                            cb(null,require('./routes/manager/detail/'));
-                        },'manager_detail')
                     }
                 },
                 {

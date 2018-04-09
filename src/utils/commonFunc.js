@@ -119,6 +119,38 @@ function isEqualObj(a,b){
     
     return true;
 }
+
+const assign = (target,...source) => {
+    
+    source.forEach(item =>{
+        let type = Object.prototype.toString.call(target);
+        if(target == null){
+            target = item;
+            return;
+        }
+
+        if(type != '[object Object]'){ 
+            target = item;
+            return;
+        }else{
+            Object.keys(item).forEach(k => {
+                if(target[k] == undefined){
+                    target[k] = item[k];
+                }else{
+                    let subType = Object.prototype.toString.call(target[k])
+                    if(subType == '[object Object]'){
+                        target[k] = assign(target[k],item[k])
+                    }else{
+                        target[k] = item[k];
+                    }
+                }
+            })
+        }
+        
+    });
+
+    return target;
+}
  
 function format_key(key) {
     while (key.length < 16) {
@@ -138,5 +170,6 @@ module.exports = {
     isPlainObj,
     aes_encrpyt,
     sha1_encrypt,
-    isEqualObj
+    isEqualObj,
+    assign
 }

@@ -1,35 +1,23 @@
-// import React,{ Component,PureComponent ,Fragment} from 'react';
-// import PropTypes from 'prop-types';
 import { connect } from 'dva';
 import { Link } from 'dva/router';
 
 import { Button, Row, Form, Input, Alert ,Icon ,Modal ,Select ,DatePicker ,InputNumber ,Spin} from 'antd';
-// import moment from 'moment';
-// import axios from 'axios';
-// import config from 'utils/config';
-
-// import { SearchForm ,TableList ,CreateModal} from 'components/Users'
-// import './index.less';
-
-// const FormItem = Form.Item;
-// const {RangePicker} = DatePicker;
-// const {Option} = Select;
-// const confirm = Modal.confirm;
-
 
 import CommonListRoute from '../common/commonListRoute';
 
 
+var namespace = 'users'
+
 class Users extends CommonListRoute{
   constructor(props){
-    super(props,{name:'users'});
+    super(props,{namespace});
   }
   renderFuncConfig = () => {
     return {
         gender: (text) => <span>{(text == 1)? '男': '女'}</span>,
         username:(text,record)=>{
           // console.log(record)
-          return <Link to={"/users/"+record.key+"/detail"}>{text}</Link>
+          return <Link to={"/"+namespace+"/"+record.key+"/detail"}>{text}</Link>
         }
     }
   }
@@ -59,14 +47,10 @@ class Users extends CommonListRoute{
 }
 
 const mapStateProps = (state)=>{
-    let {app} = state;
-    let users = state.users;
+    let {app:{isSmallScrean,isMiddleScrean}} = state;
 
-    let {isSmallScrean,isMiddleScrean} = app;
-
-    users = {...users,isSmallScrean,isMiddleScrean};
-
-    return {users}
+    return {[namespace]:{...state[namespace],isSmallScrean,isMiddleScrean}}
 }
+
 
 export default connect(mapStateProps)(Users)

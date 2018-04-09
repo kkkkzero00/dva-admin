@@ -241,7 +241,7 @@ class SelfModal extends Component{
 
 class Role extends CommonListRoute{
     constructor(props){
-        super(props,{name:namespace});
+        super(props,{namespace});
         // this.state['selectedTreeNodes'] = [];
         this.state['checkedKeys'] = []
 
@@ -316,8 +316,7 @@ class Role extends CommonListRoute{
 }
 
 const mapStateProps = (state)=>{
-    let {app} = state;
-    let {isSmallScrean,isMiddleScrean} = app;
+    let {app:{isSmallScrean,isMiddleScrean}} = state;
 
     return {[namespace]:{...state[namespace],isSmallScrean,isMiddleScrean}}
 }

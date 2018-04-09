@@ -4,10 +4,11 @@ import { Link } from 'dva/router';
 
 import { Button, Row, Form, Input, Alert ,Icon ,Modal ,Select ,DatePicker ,InputNumber ,Spin} from 'antd';
 // import moment from 'moment';
+var namespace = "manager";
 
 class Manager extends CommonListRoute{
   constructor(props){
-    super(props,{name:'manager'});
+    super(props,{namespace});
   }
 
   renderFuncConfig = () => {
@@ -15,7 +16,7 @@ class Manager extends CommonListRoute{
         gender: (text) => <span>{(text == 1)? '男': '女'}</span>,
         id:(text,record)=>{
           // console.log(record)
-          return <Link to={"/manager/"+record.key+"/detail"}>{record.key}</Link>
+          return <Link to={"/"+namespace+"/"+record.key+"/detail"}>{record.key}</Link>
         },
         role_id:(text,record)=>{
           
@@ -29,18 +30,12 @@ class Manager extends CommonListRoute{
         }
     }
   }
-  
 }
 
 const mapStateProps = (state)=>{
-    let {app} = state;
-    let manager = state.manager;
-    // console.log(manager)
-    let {isSmallScrean,isMiddleScrean} = app;
+    let {app:{isSmallScrean,isMiddleScrean}} = state;
 
-    manager = {...manager,isSmallScrean,isMiddleScrean};
-
-    return {manager}
+    return {[namespace]:{...state[namespace],isSmallScrean,isMiddleScrean}}
 }
 
 export default connect(mapStateProps)(Manager);

@@ -1,9 +1,9 @@
-import createDetail from 'utils/commonDetail';
+import commonDetailModel from 'utils/commonDetailModel';
 
 
-var modelA ={
-  namespace: 'users',
+var model ={
+  namespace: 'users/detail',
 };
 
-export default createDetail(modelA);
+export default commonDetailModel(model);
 

@@ -1,4 +1,28 @@
 import {query,getTopAlbum} from 'services/indexPage'
+import { color } from '../utils/color'
+var numbers = [
+    {
+      icon: 'pay-circle-o',
+      color: color.green,
+      title: 'Online Review',
+      number: 2781,
+    }, {
+      icon: 'team',
+      color: color.blue,
+      title: 'New Customers',
+      number: 3241,
+    }, {
+      icon: 'message',
+      color: color.purple,
+      title: 'Active Projects',
+      number: 253,
+    }, {
+      icon: 'shopping-cart',
+      color: color.red,
+      title: 'Referrals',
+      number: 4324,
+    },
+]
 
 
 export default {
@@ -14,8 +38,10 @@ export default {
       maxItem:45,//页面最大限制显示的条目数
       offset:0,//页面每三个ul偏移量
       limit:15,//每次限取多少条
-      itemNum:5//每个ul有多少个li（每个可视区域显示多少张图片）
-    }
+      itemNum:5,//每个ul有多少个li（每个可视区域显示多少张图片）,
+      
+    },
+    numbers: numbers,
   },
 
   subscriptions: {

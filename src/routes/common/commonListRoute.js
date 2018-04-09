@@ -110,9 +110,9 @@ class CommonListRoute extends Component {
       renderModalConfig:null
     };
 
-    constructor(props,{name}){
+    constructor(props,{namespace}){
       super(props);
-      this.name = name;
+      this.namespace = namespace;
     } 
 
     componentWillMount(){
@@ -126,7 +126,7 @@ class CommonListRoute extends Component {
         if(!currentRow) return true;
         // console.log(nextProps[this.name])
 
-        let newCurrRow = nextProps[this.name]['list'].filter(item => (item.key == currentRow.key))[0];
+        let newCurrRow = nextProps[this.namespace]['list'].filter(item => (item.key == currentRow.key))[0];
 
 
         if(!isEqualObj(newCurrRow,currentRow)){
@@ -138,7 +138,7 @@ class CommonListRoute extends Component {
 
 
     getUsersData(currPage=1,pageSize=10){
-        this.props.dispatch({type:`${this.name}/query`,payload:{currPage,pageSize}})
+        this.props.dispatch({type:`${this.namespace}/query`,payload:{currPage,pageSize}})
     }
 
 
@@ -150,7 +150,7 @@ class CommonListRoute extends Component {
      */
     createInputComponent = (item) => {
         let {type='text',label,options} = item;
-        let { isSmallScrean } = this.props[this.name];
+        let { isSmallScrean } = this.props[this.namespace];
         let inputSize = isSmallScrean?'small':'default';
 
         type = type.toLowerCase();
@@ -272,7 +272,7 @@ class CommonListRoute extends Component {
     }
     
     render(){
-        let namespace = this.name;
+        let namespace = this.namespace;
 
         let {formVal,selectedRows,currentRow,modalVisible,modalType,renderModalConfig} = this.state;
 
@@ -294,6 +294,8 @@ class CommonListRoute extends Component {
 
 
         let columns = [];
+
+        // console.log(this.props[namespace]);
 
         if(columnConfig.length!=0){
             let showList = columnConfig.filter(item =>{

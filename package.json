@@ -45,6 +45,7 @@
     "moment": "^2.20.1",
     "prop-types": "^15.6.0",
     "qs": "^6.5.1",
+    "react-countup": "^3.0.3",
     "redbox-react": "^1.4.3",
     "roadhog": "^1.1.1"
   }

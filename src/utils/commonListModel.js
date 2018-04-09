@@ -1,35 +1,4 @@
-
-function assign(target,...source){
-    
-    source.forEach(item =>{
-        let type = Object.prototype.toString.call(target);
-        if(target == null){
-            target = item;
-            return;
-        }
-
-        if(type != '[object Object]'){ 
-            target = item;
-            return;
-        }else{
-            Object.keys(item).forEach(k => {
-                if(target[k] == undefined){
-                    target[k] = item[k];
-                }else{
-                    let subType = Object.prototype.toString.call(target[k])
-                    if(subType == '[object Object]'){
-                        target[k] = assign(target[k],item[k])
-                    }else{
-                        target[k] = item[k];
-                    }
-                }
-            })
-        }
-        
-    });
-
-    return target;
-}
+import {assign} from 'utils/commonFunc'
 
 function commonListModel(model){
     var {namespace} = model;

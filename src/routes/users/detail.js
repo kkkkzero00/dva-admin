@@ -1,18 +1,20 @@
 import commonDetail from '../common/commonDetail';
 import { connect } from 'dva';
 
+var namespace = 'users/detail';
+
 class UserDetail extends commonDetail{
 
     constructor(props){
-        super(props,{name:'users'})
+        super(props,{namespace})
     }
-    // render(){
-    //     return (
-    //         <div>
-    //            Detail
-    //         </div>
-    //     )
-    // }
+
+    renderFuncConfig = () => {
+        return {
+            gender: (text) => <span>{(text == 1)? '男': '女'}</span>,
+        }
+    }
+
 
 }
 
@@ -23,8 +25,8 @@ UserDetail.propTypes = {
 
 const mapStateProps = (state)=>{
     let {app} = state;
-    // console.log(state);
-    let detail = state['users/detail']
+
+    let detail = state[namespace]
 
     return {detail}
 }

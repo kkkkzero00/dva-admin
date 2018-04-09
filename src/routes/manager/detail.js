@@ -1,12 +1,12 @@
 import commonDetail from '../common/commonDetail';
 import { connect } from 'dva';
 
-var namespace = 'manager';
+var namespace = 'manager/detail';
 
 class ManagerDetail extends commonDetail{
 
     constructor(props){
-        super(props,{namespace:namespace})
+        super(props,{namespace})
     }
     // render(){
     //     return (
@@ -26,7 +26,7 @@ ManagerDetail.propTypes = {
 const mapStateProps = (state)=>{
     let {app} = state;
     // console.log(state);
-    let detail = state[namespace+"/detail"]
+    let detail = state[namespace]
 
     return {detail}
 }

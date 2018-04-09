@@ -18,7 +18,10 @@ class Users extends CommonListRoute{
         username:(text,record)=>{
           // console.log(record)
           return <Link to={"/"+namespace+"/"+record.key+"/detail"}>{text}</Link>
-        }
+        },
+        // uploadBtn:()=>{
+        //   return <a onClick={}>上传</a>
+        // }
     }
   }
   /**

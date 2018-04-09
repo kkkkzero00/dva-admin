@@ -9,6 +9,7 @@ function createDetailModel(model) {
       state: {
         detail_id:0,
         message:null,
+        detail_config:{}
       },
       subscriptions: {
         setup({ dispatch, history }) {  // eslint-disable-line
@@ -38,18 +39,13 @@ function createDetailModel(model) {
             let res = yield call(read,payload.id);
             // console.log(res)
             if(res.success){
-                yield put({type:'updateState',payload:{message:res.data}});
+                yield put({type:'updateState',payload:{message:res.data,detail_config:res.config}});
             }
         }
       },
       reducers: {
           updateState(state,{payload}){
-              // console.log(state);
-              console.log(payload)
-              // console.log({
-              //     ...state,
-              //     ...payload
-              // })
+
               return {
                   ...state,
                   ...payload

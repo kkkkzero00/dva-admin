@@ -9,13 +9,12 @@ class ManagerDetail extends commonDetail{
     constructor(props){
         super(props,{namespace,title})
     }
-    // render(){
-    //     return (
-    //         <div>
-    //            Detail
-    //         </div>
-    //     )
-    // }
+    
+    renderFuncConfig = () => {
+        return {
+            gender: (text) => <span>{(text == 1)? '男': '女'}</span>,
+        }
+    }
 
 }
 

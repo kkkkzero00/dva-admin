@@ -6,9 +6,10 @@ import { Button, Row, Col,Form, Input, Alert,Spin} from 'antd';
 const FormItem = Form.Item;
 
 class Detail extends Component{
-    constructor(props,{namespace}){
+    constructor(props,{namespace,title}){
         super(props);
-        this.namespace = namespace
+        this.namespace = namespace;
+        this.title = title;
         this.renderDetail = this.renderDetail.bind(this);
 
     }
@@ -58,13 +59,11 @@ class Detail extends Component{
             
         }
 
-        var namespace = this.namespace;
-        namespace = namespace.split("/");
         // console.log(namespace)
         return (
             <div style={style.container}>
                <Row gutter={24}>
-                 <Col><h3 style={style.title}>{namespace[0]} 详情</h3></Col>
+                 <Col><h3 style={style.title}>{this.title?this.title:''} 详情</h3></Col>
                </Row>
                {message?
                 (<Row style={{marginTop:"10px"}}>

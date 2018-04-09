@@ -2,11 +2,12 @@ import commonDetail from '../common/commonDetail';
 import { connect } from 'dva';
 
 var namespace = 'manager/detail';
+var title = '管理员';
 
 class ManagerDetail extends commonDetail{
 
     constructor(props){
-        super(props,{namespace})
+        super(props,{namespace,title})
     }
     // render(){
     //     return (

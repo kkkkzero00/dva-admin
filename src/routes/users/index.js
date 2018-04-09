@@ -6,7 +6,7 @@ import { Button, Row, Form, Input, Alert ,Icon ,Modal ,Select ,DatePicker ,Input
 import CommonListRoute from '../common/commonListRoute';
 
 
-var namespace = 'users'
+var namespace = 'users';
 
 class Users extends CommonListRoute{
   constructor(props){

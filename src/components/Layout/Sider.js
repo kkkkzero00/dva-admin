@@ -31,7 +31,7 @@ class Sider  extends PureComponent{
         let menuTree = arrayToTree(menu);
 
         this.state = {
-            openKeys:['6000'],
+            openKeys:['60000'],
             menuTree,
             isNavbar,
             siderFold
@@ -133,7 +133,7 @@ class Sider  extends PureComponent{
 
             'navSider':isNavbar,
             'navFold':(isNavbar && siderFold),
-        })
+        });
 
         
         let mode = (siderFold || isNavbar) ? 'vertical' :'inline';

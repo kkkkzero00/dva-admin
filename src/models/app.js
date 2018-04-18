@@ -11,9 +11,10 @@ export default {
     state:{
         userInfo:{},
         menus:[],
+        ruleList:{},
         //打开是false，关闭是true
         siderFold:localStorage.getItem('siderFold') === 'true',
-        currentPath:[isUseMock?1:"2000"],
+        currentPath:[isUseMock?1:"20000"],
         isNavbar: document.body.clientWidth < 800,
         isMiddleScrean:document.body.clientWidth < 800 && document.body.clientWidth > 456,
         isSmallScrean:document.body.clientWidth <= 456,
@@ -28,10 +29,10 @@ export default {
             // console.log(JSON.parse(Cookies.get('userInfo')))
             // console.log(Cookies.get('userInfo'))
             if(Cookies.get('userInfo')){
-                let {menus,userInfo} = JSON.parse(Cookies.get('userInfo'));
+                let {menus,userInfo,ruleList} = JSON.parse(Cookies.get('userInfo'));
                 
                 
-                dispatch({type:'updateState',payload:{userInfo, menus,}})
+                dispatch({type:'updateState',payload:{userInfo, menus,ruleList}})
             }else{
                 dispatch(routerRedux.push('/login'));
             }
@@ -84,7 +85,8 @@ export default {
             // let token = Cookies.get('u_Tok');
             let res = yield call(query,payload);
             let {success,data} = res;         
-            // console.log(res)
+            // console.log(res);
+
             if(success){
                 let menus;
                 let permissions;
@@ -104,11 +106,12 @@ export default {
 
                 // console.log(menus);
                 
-                Cookies.set('userInfo',{menus,userInfo},{expires: 1 })
+                Cookies.set('userInfo',{menus,userInfo,ruleList:data.ruleList},{expires: 1 })
                 // console.log(JSON.parse(Cookies.get('userInfo')));
-                
+
+
                 /*注册到全局也就是app的state里面*/
-                yield put({type:"updateState",payload:{userInfo,menus,}})
+                yield put({type:"updateState",payload:{userInfo,menus,ruleList:data.ruleList}})
 
                 yield put({type:'login/updateState',payload:{loginMessage:'登录成功！',hasTriggerLogin:1}})
 
@@ -137,7 +140,8 @@ export default {
             // console.log(res)
             if(res.success){
                 Cookies.remove('userInfo');
-
+                Cookies.remove('currentPath');
+                
                 yield put({type:"checkLogin"});
                 yield put({
                     type:'login/updateState',
@@ -168,7 +172,7 @@ export default {
             let currP = menus.filter(item => item.route === paths)[0];
 
             // console.log(menus);
-            // console.log(paths)
+            // console.log(menus)
 
             let keyPath = currP.path.split("-");
 

@@ -22,9 +22,20 @@ export default class CommonServices {
         this.create = this.create.bind(this);
         this.update = this.update.bind(this);
         this.remove = this.remove.bind(this);
+        // console.log(this);
+        // this.getName();
+        // this.getName2();
     }
 
-    async query(data){
+    getName(){
+        // console.log(this);
+    }
+
+    getName2 = () => {
+        console.log(this);//箭头函数会自动绑定到当前类上
+    }
+
+    async query (data){
         // console.log(this)
         let {currPage,pageSize,...otherParams} = data;
 
@@ -59,7 +70,7 @@ export default class CommonServices {
     }
 
     /*读取单条数据*/
-    async  read(id){
+    async read (id){
         let url = api[this.apiName] +'/'+id+'/read';
 
         let params = {

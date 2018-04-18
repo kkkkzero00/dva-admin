@@ -50,9 +50,8 @@ class Users extends CommonListRoute{
 }
 
 const mapStateProps = (state)=>{
-    let {app:{isSmallScrean,isMiddleScrean}} = state;
-
-    return {[namespace]:{...state[namespace],isSmallScrean,isMiddleScrean}}
+    let {app} = state;
+    return {[namespace]:{...state[namespace]},app}
 }
 
 

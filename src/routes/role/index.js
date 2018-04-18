@@ -16,7 +16,7 @@ class SelfModal extends Component{
         let {currRules} = this.props;
 
         this.state = {
-             checkedKeys:{checked:currRules||[], halfChecked:[]},
+             checkedKeys:currRules||[],
              confirmLoading:false
         }
 
@@ -24,6 +24,8 @@ class SelfModal extends Component{
         this.renderTreeNodes = this.renderTreeNodes.bind(this);
         this.onCancel = this.onCancel.bind(this);
         this.handleOk = this.handleOk.bind(this);
+
+
     }
 
     renderTreeNodes(data){
@@ -44,47 +46,47 @@ class SelfModal extends Component{
     }
 
     onCheck(hashTable,checkedKeys){
-        // console.log()
-        var checked = checkedKeys['checked'];
+        // console.log(checkedKeys)
+        // var checked = checkedKeys['checked'];
 
-        function searchParent(item,res){
+        // function searchParent(item,res){
 
-            let parent = hashTable[item].pid;
+        //     let parent = hashTable[item].pid;
 
-            if(parent!=0){
-                res.push(parent.toString());
-                searchParent(parent,res)
-            }
-        }
-
-
-        function getParent(checked){
-
-            let res = [];
-            var temp = null;
-
-            checked.forEach((item,index) => {
-                var group = item.slice(0,2);
-                if(index==0){
-                    temp = group;
-                    searchParent(item,res);
-                    return;
-                }
-
-                if(temp!=group){
-                    temp = group;
-                    searchParent(item,res);
-                }
-            });
+        //     if(parent!=0){
+        //         res.push(parent.toString());
+        //         searchParent(parent,res)
+        //     }
+        // }
 
 
-            res = [...(new Set(res.concat(checked)))];
+        // function getParent(checked){
 
-            return res;
-        }
+        //     let res = [];
+        //     var temp = null;
 
-        checkedKeys['checked'] = getParent(checked);
+        //     checked.forEach((item,index) => {
+        //         var group = item.slice(0,2);
+        //         if(index==0){
+        //             temp = group;
+        //             searchParent(item,res);
+        //             return;
+        //         }
 
+        //         if(temp!=group){
+        //             temp = group;
+        //             searchParent(item,res);
+        //         }
+        //     });
+
+
+        //     res = [...(new Set(res.concat(checked)))];
+
+        //     return res;
+        // }
+
+        // checkedKeys['checked'] = getParent(checked);
+        // console.log(checkedKeys);
         this.setState({
             checkedKeys
         });
@@ -125,10 +127,9 @@ class SelfModal extends Component{
 
     handleOk(){
         let {token,currentRow:{id,key},renderModalConfig:{onSubmit}} = this.props;
-        let {checkedKeys:{checked}} = this.state;
-        // console.log(checked);
-
-        let data = {access:checked,token,role_id:key};
+        let {checkedKeys} = this.state;
+        // console.log(checkedKeys);
+        let data = {access:checkedKeys,token,role_id:key};
 
         onSubmit({data});
 
@@ -177,7 +178,6 @@ class SelfModal extends Component{
             return <Tree
                 checkable
                 defaultExpandAll={true}
-                checkStrictly={true}
                 onExpand={this.onExpand.bind(this)}
                 checkedKeys={this.state.checkedKeys}
                 onCheck={this.onCheck.bind(this,hashTable)}
@@ -223,7 +223,6 @@ class SelfModal extends Component{
           submitStatus
         } = this.props;
 
-
         return (
           <Modal
               confirmLoading={this.state.confirmLoading}
@@ -244,10 +243,10 @@ class Role extends CommonListRoute{
         super(props,{namespace});
         // this.state['selectedTreeNodes'] = [];
         this.state['checkedKeys'] = []
-
     }
 
     renderFuncConfig = () => {
+        // console.log(this.props);
         return {
             status: (text) => <span style={{color:(text == 1)?'green':'red'}}>{(text == 1)? '启用': '禁用'}</span>,
         }
@@ -260,65 +259,64 @@ class Role extends CommonListRoute{
 
     renderCustomBtn = () =>{
         return [
-          {
-            key:'giveAccess',
-            name:'授权',
-            style:{},
-            type:'modal',
-            rcForm:false,
-            beforeClick:()=>{
-               
-                if(this.props[namespace].accessList.length == 0){
-                    this.props.dispatch({type:'role/getAccess'});
+            {
+                key:'getAccess',
+                name:'授权',
+                style:{},
+                type:'modal',
+                rcForm:false,
+                beforeClick:()=>{
+                   
+                    if(this.props[namespace].accessList.length == 0){
+                        this.props.dispatch({type:'role/getAccess'});
+                    }
+                    // console.log();
+                },
+                render:(params)=>{
+                   
+                    let {accessList} = this.props[namespace];
+                    var currRules = [];
+
+                    let {currentRow} = params;
+
+                    if(currentRow && Object.keys(currentRow).length){
+                        // console.log(currentRow.rules)
+                        currentRow.rules.forEach(item => {
+                            currRules.push(item.id.toString())
+                        })
+                    }
+
+                    var modalProps = {
+                        ...params,
+                        accessList,
+                        currRules,
+                    }
+
+                    return <SelfModal {...modalProps}/>
+                    
+                },
+                /**
+                 * [description]
+                 * @param  {[type]} currentRow [当前被选中的行的信息]
+                 * @param  {[type]} data       [提交的数据]
+                 * @param  {[type]} type       [description]
+                 * @return {[type]}            [description]
+                 */
+                onSubmit:({data})=>{
+                    // console.log(data);
+                    this.props.dispatch({type:'role/setAccess',payload:{data}});
                 }
-                // console.log();
-            },
-            render:(params)=>{
-               
-                let {accessList} = this.props[namespace];
-                var currRules = [];
-
-                let {currentRow} = params;
-
-                if(currentRow && Object.keys(currentRow).length){
-                    // console.log(currentRow.rules)
-                    currentRow.rules.forEach(item => {
-                        currRules.push(item.id.toString())
-                    })
-                }
-
-                var modalProps = {
-                    ...params,
-                    accessList,
-                    currRules,
-                }
-
-                return <SelfModal {...modalProps}/>
                 
-            },
-            /**
-             * [description]
-             * @param  {[type]} currentRow [当前被选中的行的信息]
-             * @param  {[type]} data       [提交的数据]
-             * @param  {[type]} type       [description]
-             * @return {[type]}            [description]
-             */
-            onSubmit:({data})=>{
-
-                this.props.dispatch({type:'role/setAccess',payload:{data}});
-                // console.log(this.props);
-                // console.log(this.state);
             }
-            
-          }
         ]
     }
 }
 
 const mapStateProps = (state)=>{
-    let {app:{isSmallScrean,isMiddleScrean}} = state;
+    // console.log(state);
+    let {app} = state;
 
-    return {[namespace]:{...state[namespace],isSmallScrean,isMiddleScrean}}
+    return {[namespace]:{...state[namespace]},app}
 }
 
 export default connect(mapStateProps)(Role);

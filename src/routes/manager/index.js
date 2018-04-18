@@ -33,9 +33,9 @@ class Manager extends CommonListRoute{
 }
 
 const mapStateProps = (state)=>{
-    let {app:{isSmallScrean,isMiddleScrean}} = state;
+    let {app} = state;
 
-    return {[namespace]:{...state[namespace],isSmallScrean,isMiddleScrean}}
+    return {[namespace]:{...state[namespace]},app}
 }
 
 export default connect(mapStateProps)(Manager);

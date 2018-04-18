@@ -4,18 +4,22 @@ import { connect } from 'dva';
 import Layout from 'components/Layout';
 import Cookies from 'js-cookie';
 import classnames from 'classnames';
+import { Helmet } from 'react-helmet'
 import "./app.less";
 
 import Loader from 'components/Loader';
 
 const {Sider,Header,Bread} = Layout;
 
-const App = ({children,dispatch,app,loading,location}) => {
-    
+const App = (args) => {
+
+    let {children,dispatch,app,loading,location} = args;
+ 
     const token = Cookies.get('u_Tok');
    
-    let {siderFold,menus,userInfo,currentPath,isNavbar,openKeys,isSmallScrean} = app
-
+    let {siderFold,menus,userInfo,currentPath,isNavbar,openKeys,isSmallScrean} = app;
+    // console.log(currentPath);
+    // console.log(args)
     // console.log(siderFold)
     // 还没登录就跳转到登录框
     // console.log(!token || location.pathname == '/login')
@@ -39,7 +43,7 @@ const App = ({children,dispatch,app,loading,location}) => {
         loadingEffects:loading.effects,
         handleClick(item, key, keyPath){    
             Cookies.set('currentPath',keyPath);
-            dispatch({type:'app/updateState',payload:{currentPath:keyPath}})  
+            dispatch({type:'app/updateState',payload:{currentPath:keyPath}});  
         }
     };
     // console.log(app);
@@ -73,6 +77,11 @@ const App = ({children,dispatch,app,loading,location}) => {
 
     return (
         <div className="wrapper">
+            <Helmet>
+                <title>DVA ADMIN</title>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                {/*<link rel="icon" href={logo} type="image/x-icon" />*/}
+            </Helmet>
             <Loader spinning={loading.effects['app/logout']}/>
             <Sider {...siderProp}/>
             {isNavbar && (!siderFold)?(<div className="drawer-bg" onClick={drawerBgProps.switchSider}></div>):''}

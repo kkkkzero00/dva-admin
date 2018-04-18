@@ -24,7 +24,10 @@ const {Option} = Select;
 const confirm = Modal.confirm;
 
 
-const ToolBtn = ({selectedRows,onBtnHandler,customBtn}) => {
+const hasRule = (ruleList,namespace,action) => (ruleList=='all' || !!(ruleList[namespace+"/"+action]));
+
+
+const ToolBtn = ({selectedRows,onBtnHandler,customBtn,namespace,ruleList}) => {
     let selectedRowsLen = selectedRows.length;
 
     let style = {
@@ -35,6 +38,8 @@ const ToolBtn = ({selectedRows,onBtnHandler,customBtn}) => {
     function renderCustomBtn(btn){
        if(btn.length){
           return btn.map(item => {
+            if(!hasRule(ruleList,namespace,item.key.toLowerCase())) return null;
+
             let render = item.btnRender;
             delete item.btnRender;
 
@@ -71,14 +76,17 @@ const ToolBtn = ({selectedRows,onBtnHandler,customBtn}) => {
     return (
       <div className="toolBtn">
 
-          <Button type="primary" className="add-btn" onClick={onBtnHandler.bind(this,'add',null)}>新增</Button>
-          {(selectedRowsLen>0)?
+          {hasRule(ruleList,namespace,'insert')?<Button type="primary" className="add-btn" onClick={onBtnHandler.bind(this,'add',null)}>新增</Button>:""}
+          
+
+          {(hasRule(ruleList,namespace,'update') && selectedRowsLen>0)?
               <Button type="ghost" 
                       className="edit-btn"
                       key="edit-btn"
                       {...((selectedRowsLen>1)?{disabled:true}:{onClick:onBtnHandler.bind(this,'edit',null)})}>编辑</Button>:''}
+          
           {
-            (selectedRowsLen>0)?
+            (hasRule(ruleList,namespace,'delete') && selectedRowsLen>0)?
               (selectedRowsLen>1)?
               (<Button
                   type="ghost"
@@ -113,6 +121,7 @@ class CommonListRoute extends Component {
     constructor(props,{namespace}){
       super(props);
       this.namespace = namespace;
+      // this.useState = this.useState.bind(this)
     } 
 
     componentWillMount(){
@@ -149,8 +158,12 @@ class CommonListRoute extends Component {
      * @return {[type]}                 [description]
      */
     createInputComponent = (item) => {
+        // console.log(this);
+        // this.setState({
+        //   hjk:'kkkk'
+        // })
         let {type='text',label,options} = item;
-        let { isSmallScrean } = this.props[this.namespace];
+        let { isSmallScrean } = this.props.app;
         let inputSize = isSmallScrean?'small':'default';
 
         type = type.toLowerCase();
@@ -270,11 +283,31 @@ class CommonListRoute extends Component {
               }
         }
     }
+
+    /*
+      Warning: setState(...): Cannot update during an existing state transition 
+      (such as within `render` or another component's constructor). Render methods 
+      should be a pure function of props and state; constructor side-effects are an 
+      anti-pattern, but can be moved to `componentWillMount`.
+
+     */
+    useState(){
+      console.log(this)  
+      this.setState({
+        hjk:'cc'
+      })
+    }
     
     render(){
+        // this.setState({
+        //   hjk:'gfg'
+        // })
+        // 
         let namespace = this.namespace;
 
         let {formVal,selectedRows,currentRow,modalVisible,modalType,renderModalConfig} = this.state;
+
+        // this.useState();
 
         let {
           dispatch,
@@ -287,8 +320,11 @@ class CommonListRoute extends Component {
             pageSize,
             total,
             submitStatus,
+          },
+          app:{
             isSmallScrean,
-            isMiddleScrean
+            isMiddleScrean,
+            ruleList
           }
         } = this.props;
 
@@ -409,6 +445,8 @@ class CommonListRoute extends Component {
 
         const toolBtnProps = {
           selectedRows,
+          namespace,
+          ruleList,
           customBtn:this.renderCustomBtn?(this.renderCustomBtn()):null,
           onBtnHandler:(modalType,renderModalConfig,e)=>{
           
@@ -477,14 +515,18 @@ class CommonListRoute extends Component {
         }
 
 
-        // console.log(renderModalConfig)
         return (
             <div className="contentInner">
                 <div className="list-card-body">
                     <div className="searchList">
                         <SearchForm {...searchFormProps}/>
-                        <ToolBtn {...toolBtnProps}/>
-                        {(columns.length!=0)?<TableList {...tableListProps}/>:<Spin style={{width:"100%",margin:"0 auto",textAlign:'center'}}/>}
+                        {hasRule(ruleList,namespace,'lists')?<ToolBtn {...toolBtnProps}/>:''}
+                        {hasRule(ruleList,namespace,'lists')?
+                          ((columns.length!=0)?
+                            <TableList {...tableListProps}/>:
+                            <Spin style={{width:"100%",margin:"0 auto",textAlign:'center'}}/>):
+                          ''
+                        }
                         {modalVisible?(renderModalConfig?renderModalConfig.render(modalProps):<CreateModal {...modalProps}/>):''}
                     </div>
                 </div>

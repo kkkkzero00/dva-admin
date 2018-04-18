@@ -25,7 +25,7 @@ const Bread = ({currentPath,menus}) => {
     const getBread = (currPath,currMenu) => {
         let Breads = [];
 
-        // console.log(currPath)
+        // console.log(currPath);
         while(currPath.length > 0){
             let breadId = currPath.shift();
 
